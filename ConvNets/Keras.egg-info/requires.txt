@@ -1,0 +1,6 @@
+theano
+pyyaml
+six
+
+[h5py]
+h5py
