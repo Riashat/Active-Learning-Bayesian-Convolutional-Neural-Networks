@@ -478,14 +478,17 @@ class Sequential(Model, containers.Sequential):
 
         self._train = K.function(train_ins, [train_loss], updates=updates)
         self._train_with_acc = K.function(train_ins, [train_loss, train_accuracy], updates=updates)
-
-        #self._predict = K.function(predict_ins, [self.y_test], updates=self.state_updates)
-        # self._predict_stochastic = K.function(predict_ins, self.y_train, allow_input_downcast=True, model=theano_mode)
-
-        self._predict = K.function(predict_ins, [self.y_train], allow_input_downcast=True, model=theano_mode)
-
         self._test = K.function(test_ins, [test_loss], updates=self.state_updates)
         self._test_with_acc = K.function(test_ins, [test_loss, test_accuracy], updates=self.state_updates)
+
+
+        #self._predict_stochastic = K.function(predict_ins, [self.y_train], updates=self.state_updates)
+        #self._predict_stochastic = K.function(predict_ins, [self.y_train], allow_input_downcast=True, mode=theano_mode)
+
+        #self._predict = K.function(predict_ins, [self.y_train], updates=self.state_updates)
+        self._predict = K.function(predict_ins, self.y_train, allow_input_downcast=True, mode=theano_mode)
+
+    
 
     def fit(self, X, y, batch_size=128, nb_epoch=100, verbose=1, callbacks=[],
             validation_split=0., validation_data=None, shuffle=True,
@@ -623,24 +626,25 @@ class Sequential(Model, containers.Sequential):
         # Returns
             A numpy array of predictions.
         '''
+
         X = standardize_X(X)
         return self._predict_loop(self._predict, X, batch_size, verbose)[0]
 
 
-    def predict_stochastic(self, X, batch_size=128, verbose=0):
-        '''Generate output predictions for the input samples
-        batch by batch.
+    # def predict_stochastic(self, X, batch_size=128, verbose=0):
+    #     '''Generate output predictions for the input samples
+    #     batch by batch.
 
-        # Arguments
-            X: the input data, as a numpy array.
-            batch_size: integer.
-            verbose: verbosity mode, 0 or 1.
+    #     # Arguments
+    #         X: the input data, as a numpy array.
+    #         batch_size: integer.
+    #         verbose: verbosity mode, 0 or 1.
 
-        # Returns
-            A numpy array of predictions.
-        '''
-        X = standardize_X(X)
-        return self._predict_loop(self._predict_stochastic, X, batch_size, verbose)[0]
+    #     # Returns
+    #         A numpy array of predictions.
+    #     '''
+    #     X = standardize_X(X)
+    #     return self._predict_loop(self._predict_stochastic, X, batch_size, verbose)[0]
 
 
     def predict_proba(self, X, batch_size=128, verbose=1):
