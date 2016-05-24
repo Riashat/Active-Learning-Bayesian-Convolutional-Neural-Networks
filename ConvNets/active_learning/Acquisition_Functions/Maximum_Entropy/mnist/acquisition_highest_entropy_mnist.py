@@ -17,7 +17,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 5
+nb_epoch = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -35,25 +35,25 @@ X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
-X_valid = X_train_All[6000:9000, :, :, :]
-y_valid = y_train_All[6000:9000]
+X_valid = X_train_All[600:900, :, :, :]
+y_valid = y_train_All[600:900]
 
-X_train = X_train_All[0:6000, :, :, :]
-y_train = y_train_All[0:6000]
+X_train = X_train_All[0:600, :, :, :]
+y_train = y_train_All[0:600]
 
-X_Pool = X_train_All[9000:60000, :, :, :]
-y_Pool = y_train_All[9000:60000]
+X_Pool = X_train_All[900:1500, :, :, :]
+y_Pool = y_train_All[900:1500]
 
-X_test = X_test[0:4000, :, :, :]
-y_test = y_test[0:4000]
+X_test = X_test[0:200, :, :, :]
+y_test = y_test[0:200]
 
 print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 10
-N = 1000
+acquisition_iterations = 2
+N = 100
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
@@ -114,6 +114,13 @@ for i in range(acquisition_iterations):
 	# a_1d = Entropy.flatten()
 	# x_pool_index = a_1d.argsort()[-N:]
 
+		#saving pooled images
+	for im in range(x_pool_index.shape[0]):
+		Image = X_Pool[x_pool_index[im], :, :, :]
+		img = Image.reshape((28,28))
+		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Maximum_Entropy/mnist/Pooled_Images/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+
+
 	Pooled_X = X_Pool[x_pool_index, :, :, :]
 	Pooled_Y = y_Pool[x_pool_index]		# true label from the oracle
 
@@ -137,6 +144,7 @@ for i in range(acquisition_iterations):
 	print('Test score:', score)
 	print('Test accuracy:', acc)
 	all_accuracy = np.append(all_accuracy, acc)
+	
 
 
 # print('SIZE OF TRAINING DATA AFTER ACQUISITIONS', X_train.shape)

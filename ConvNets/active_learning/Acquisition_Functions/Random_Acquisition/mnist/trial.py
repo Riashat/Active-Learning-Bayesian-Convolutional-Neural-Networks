@@ -35,25 +35,25 @@ X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
-X_valid = X_train_All[5000:7000, :, :, :]
-y_valid = y_train_All[5000:7000]
+X_valid = X_train_All[6000:9000, :, :, :]
+y_valid = y_train_All[6000:9000]
 
-X_train = X_train_All[0:5000, :, :, :]
-y_train = y_train_All[0:5000]
+X_train = X_train_All[0:6000, :, :, :]
+y_train = y_train_All[0:6000]
 
-X_Pool = X_train_All[7000:60000, :, :, :]
-y_Pool = y_train_All[7000:60000]
+X_Pool = X_train_All[9000:60000, :, :, :]
+y_Pool = y_train_All[9000:60000]
 
-X_test = X_test[0:2000, :, :, :]
-y_test = y_test[0:2000]
+X_test = X_test[0:4000, :, :, :]
+y_test = y_test[0:4000]
 
 print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
 
 score=0
 accuracy = 0
-acquisition_iterations = 5
-N = 1000
+acquisition_iterations = 2
+N = 100
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
@@ -74,14 +74,21 @@ for i in range(acquisition_iterations):
 
 	print('POOLING ITERATION NUMBER', i)
 
-	R = np.asarray(random.sample(range(0, 52999), N))
+	R = np.asarray(random.sample(range(0, 50000), N))
 
 	Pooled_X = X_Pool[R, :, :, :]
 	Pooled_Y = y_Pool[R]
 
+
+	#saving pooled images
+	for im in range(R.shape[0]):
+		Image = X_Pool[R[im], :, :, :]
+		img = Image.reshape((28,28))
+		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/mnist/PooledImages/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+
+	
 	X_train = np.concatenate((X_train, Pooled_X), axis=0)
 	y_train = np.concatenate((y_train, Pooled_Y), axis=0)
-
 
 	print('After random acquisitions')
 	print(X_train.shape[0], 'train samples after acquisition')
@@ -92,8 +99,6 @@ for i in range(acquisition_iterations):
 
 	# convert class vectors to binary class matrices
 	Y_train = np_utils.to_categorical(y_train, nb_classes)
-
-
 
 	model = Sequential()
 
@@ -134,7 +139,7 @@ for i in range(acquisition_iterations):
 
 
 # np.savetxt("Acquisition_Scores.csv", score, delimiter=",")
-np.savetxt("MNIST Acquisition_Accuracy.csv", accuracy, delimiter=",")
+np.savetxt("Random Acquisition_Accuracy.csv", accuracy, delimiter=",")
 
 # plt.figure(figsize=(8, 6), dpi=80)
 # plt.clf()

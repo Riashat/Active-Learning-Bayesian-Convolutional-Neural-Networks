@@ -486,7 +486,7 @@ class Sequential(Model, containers.Sequential):
         #self._predict_stochastic = K.function(predict_ins, [self.y_train], allow_input_downcast=True, mode=theano_mode)
 
         #self._predict = K.function(predict_ins, [self.y_train], updates=self.state_updates)
-        self._predict = K.function(predict_ins, self.y_train, allow_input_downcast=True, mode=theano_mode)
+        #self._predict = K.function(predict_ins, self.y_train, allow_input_downcast=True, mode=theano_mode)
 
     
 

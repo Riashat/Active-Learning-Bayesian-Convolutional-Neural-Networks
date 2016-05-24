@@ -17,7 +17,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 5
+nb_epoch = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -52,8 +52,8 @@ print(X_train.shape[0], 'train samples')
 
 score=0
 accuracy = 0
-acquisition_iterations = 10
-N = 1000
+acquisition_iterations = 2
+N = 100
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
@@ -79,9 +79,16 @@ for i in range(acquisition_iterations):
 	Pooled_X = X_Pool[R, :, :, :]
 	Pooled_Y = y_Pool[R]
 
+
+	#saving pooled images
+	for im in range(R.shape[0]):
+		Image = X_Pool[R[im], :, :, :]
+		img = Image.reshape((28,28))
+		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/mnist/PooledImages/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+
+	
 	X_train = np.concatenate((X_train, Pooled_X), axis=0)
 	y_train = np.concatenate((y_train, Pooled_Y), axis=0)
-
 
 	print('After random acquisitions')
 	print(X_train.shape[0], 'train samples after acquisition')
@@ -92,8 +99,6 @@ for i in range(acquisition_iterations):
 
 	# convert class vectors to binary class matrices
 	Y_train = np_utils.to_categorical(y_train, nb_classes)
-
-
 
 	model = Sequential()
 
@@ -134,7 +139,7 @@ for i in range(acquisition_iterations):
 
 
 # np.savetxt("Acquisition_Scores.csv", score, delimiter=",")
-np.savetxt("MNIST Acquisition_Accuracy.csv", accuracy, delimiter=",")
+np.savetxt("Random Acquisition_Accuracy.csv", accuracy, delimiter=",")
 
 # plt.figure(figsize=(8, 6), dpi=80)
 # plt.clf()

@@ -17,7 +17,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 5
+nb_epoch = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -35,17 +35,17 @@ X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
-X_valid = X_train_All[6000:9000, :, :, :]
-y_valid = y_train_All[6000:9000]
+X_valid = X_train_All[2000:3000, :, :, :]
+y_valid = y_train_All[2000:3000]
 
-X_train = X_train_All[0:6000, :, :, :]
-y_train = y_train_All[0:6000]
+X_train = X_train_All[0:2000, :, :, :]
+y_train = y_train_All[0:2000]
 
-X_Pool = X_train_All[9000:60000, :, :, :]
-y_Pool = y_train_All[9000:60000]
+X_Pool = X_train_All[3000:20000, :, :, :]
+y_Pool = y_train_All[3000:20000]
 
-X_test = X_test[0:4000, :, :, :]
-y_test = y_test[0:4000]
+X_test = X_test[0:2000, :, :, :]
+y_test = y_test[0:2000]
 
 print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
@@ -66,9 +66,9 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 10
+acquisition_iterations = 2
 dropout_iterations = 5
-Queries = 1000    # number of aquisitions per iteration
+Queries = 100   # number of aquisitions per iteration
 
 
 
@@ -77,8 +77,6 @@ for i in range(acquisition_iterations):
 	print('POOLING ITERATION', i)
 	# convert class vectors to binary class matrices
 	Y_train = np_utils.to_categorical(y_train, nb_classes)
-
-	Dropout_Score = np.zeros(shape=(X_Pool.shape[0], nb_classes))
 
 
 	model = Sequential()
@@ -105,59 +103,74 @@ for i in range(acquisition_iterations):
 	Valid_Loss = np.asarray([Valid_Loss]).T
 
 
-	for d in range(5):
+	for d in range(dropout_iterations):
 		print ('Dropout Iteration', d)
 		score = model.predict(X_Pool,batch_size=batch_size, verbose=1)
-		Dropout_Score = np.append(Dropout_Score, score, axis=0)
-
-	score1 = Dropout_Score[1000:2000,:] 
-	score2 = Dropout_Score[2000:3000,:] 
-	score3 = Dropout_Score[3000:4000,:] 
-	score4 = Dropout_Score[4000:5000,:] 
-	score5 = Dropout_Score[5000:6000,:] 
+		np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Dropout_Scores/'+'Dropout_Score_'+str(d)+'.npy',score)
 
 
+	score0 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Dropout_Scores/'+'Dropout_Score_0.npy')
+	score1 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Dropout_Scores/'+'Dropout_Score_1.npy')
+	score2 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Dropout_Scores/'+'Dropout_Score_2.npy')
+	score3 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Dropout_Scores/'+'Dropout_Score_3.npy')
+	score4 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Dropout_Scores/'+'Dropout_Score_4.npy')
 
-	All_Pi = score1 + score2 + score3 + score4 + score5
 
+	All_Pi = score0 + score1 + score2 + score3 + score4
 	Avg_Pi = np.divide(All_Pi, dropout_iterations)
 	Log_Avg_Pi = np.log2(Avg_Pi)
 	Entropy_Avg_Pi = - np.multiply(Avg_Pi, Log_Avg_Pi)
 	Entropy_Average_Pi = np.sum(Entropy_Avg_Pi, axis=1)
 
+	G_X = Entropy_Average_Pi
+
+	H_Matrix = np.zeros(shape=(score.shape[0], dropout_iterations))
+
+
+	Log_Score0 = np.log2(score0)
+	Entropy0 = - np.multiply(score0, Log_Score0)
+	Entropy_Score0 = np.sum(Entropy0, axis=1)
 
 	Log_Score1 = np.log2(score1)
 	Entropy1 = - np.multiply(score1, Log_Score1)
-	Entropy_Score1 = np.sum(Entropy1)
+	Entropy_Score1 = np.sum(Entropy1, axis=1)
 
 	Log_Score2 = np.log2(score2)
 	Entropy2 = - np.multiply(score2, Log_Score1)
-	Entropy_Score2 = np.sum(Entropy2)
+	Entropy_Score2 = np.sum(Entropy2, axis=1)
 	
 	Log_Score3 = np.log2(score3)
 	Entropy3 = - np.multiply(score1, Log_Score3)
-	Entropy_Score3 = np.sum(Entropy3)
+	Entropy_Score3 = np.sum(Entropy3, axis=1)
 	
 	Log_Score4 = np.log2(score4)
 	Entropy4 = - np.multiply(score4, Log_Score4)
-	Entropy_Score4 = np.sum(Entropy4)
+	Entropy_Score4 = np.sum(Entropy4, axis=1)
 	
-	Log_Score5 = np.log2(score5)
-	Entropy5 = - np.multiply(score5, Log_Score5)
-	Entropy_Score5 = np.sum(Entropy5)
 
-	All_Entropy = Entropy_Score1 + Entropy_Score2 + Entropy_Score3 + Entropy_Score4 + Entropy_Score5
+	All_Entropy = Entropy_Score0 + Entropy_Score1 + Entropy_Score2 + Entropy_Score3 + Entropy_Score4 
 	Average_Entropy = np.divide(All_Entropy, dropout_iterations)
 
-	U_X = Entropy_Average_Pi - Average_Entropy
+	F_X = Average_Entropy
 
-	# x_pool_index = U_X.argsort()[-Queries:][::-1]
+	U_X = G_X - F_X
+
 
 	# THIS FINDS THE MINIMUM INDEX 
-	a_1d = U_X.flatten()
-	x_pool_index = a_1d.argsort()[-Queries:]
+	# a_1d = U_X.flatten()
+	# x_pool_index = a_1d.argsort()[-Queries:]
 
-	# x_pool_index = U_X.argsort()[-Queries:][::-1]
+	a_1d = U_X.flatten()
+	x_pool_index = a_1d.argsort()[-Queries:][::-1]
+
+
+
+	#saving pooled images
+	for im in range(x_pool_index.shape[0]):
+		Image = X_Pool[x_pool_index[im], :, :, :]
+		img = Image.reshape((28,28))
+		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Pooled_Images/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+
 
 	Pooled_X = X_Pool[x_pool_index, 0:3,0:32,0:32]
 	Pooled_Y = y_Pool[x_pool_index]	
