@@ -17,7 +17,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 1
+nb_epoch = 10
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -35,17 +35,17 @@ X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
-X_valid = X_train_All[2000:3000, :, :, :]
-y_valid = y_train_All[2000:3000]
+X_valid = X_train_All[2000:3500, :, :, :]
+y_valid = y_train_All[2000:3500]
 
-X_train = X_train_All[0:2000, :, :, :]
-y_train = y_train_All[0:2000]
+X_train = X_train_All[0:1875, :, :, :]
+y_train = y_train_All[0:1875]
 
-X_Pool = X_train_All[3000:20000, :, :, :]
-y_Pool = y_train_All[3000:20000]
+X_Pool = X_train_All[4000:44000, :, :, :]
+y_Pool = y_train_All[4000:44000]
 
-X_test = X_test[0:2000, :, :, :]
-y_test = y_test[0:2000]
+# X_test = X_test[0:2000, :, :, :]
+# y_test = y_test[0:2000]
 
 print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
@@ -66,10 +66,15 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 2
+acquisition_iterations = 10
 dropout_iterations = 5
 Queries = 100   # number of aquisitions per iteration
 
+
+
+Pool_Valid_Loss = np.zeros(shape=(nb_epoch, 1)) 	#row - no.of epochs, col (gets appended) - no of pooling
+Pool_Train_Loss = np.zeros(shape=(nb_epoch, 1)) 
+x_pool_All = np.zeros(shape=(1))
 
 
 
@@ -101,6 +106,10 @@ for i in range(acquisition_iterations):
 	Train_Loss = np.array([Train_Loss]).T
 	Valid_Loss = np.asarray(Train_Result_Optimizer.get('val_loss'))
 	Valid_Loss = np.asarray([Valid_Loss]).T
+
+	#Accumulate the training and validation/test loss after every pooling iteration - for plotting
+	Pool_Valid_Loss = np.append(Pool_Valid_Loss, Valid_Loss, axis=1)
+	Pool_Train_Loss = np.append(Pool_Train_Loss, Train_Loss, axis=1)	
 
 
 	for d in range(dropout_iterations):
@@ -163,6 +172,9 @@ for i in range(acquisition_iterations):
 	a_1d = U_X.flatten()
 	x_pool_index = a_1d.argsort()[-Queries:][::-1]
 
+
+	#store all the pooled images indexes
+	x_pool_All = np.append(x_pool_All, x_pool_index)
 
 
 	#saving pooled images
@@ -232,6 +244,25 @@ for i in range(acquisition_iterations):
 # all_accuracy = np.append(all_accuracy, acc)
 
 np.savetxt("Dropout BALD Accuracy Values.csv", all_accuracy, delimiter=",")
+
+
+
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Results/'+'All_Train_Loss'+'.npy', Pool_Train_Loss)
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Results/'+ 'All_Valid_Loss'+'.npy', Pool_Valid_Loss)
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Results/'+'All_Pooled_Image_Index'+'.npy', x_pool_All)
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/Dropout_BALD/Results/'+ 'All_Accuracy_Results'+'.npy', all_accuracy)
+
+
+
+
+
+
+
+# All_Accuracy = np.load('')
+# Pool_Train_Loss = np.load('')
+# Pool_Valid_Loss = np.load('')
+
+
 
 
 # plt.figure(figsize=(8, 6), dpi=80)

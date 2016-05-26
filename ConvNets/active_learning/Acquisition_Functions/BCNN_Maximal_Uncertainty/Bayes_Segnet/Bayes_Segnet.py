@@ -17,7 +17,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 3
+nb_epoch = 10
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -35,17 +35,19 @@ X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
-X_valid = X_train_All[2000:3000, :, :, :]
-y_valid = y_train_All[2000:3000]
+X_valid = X_train_All[2000:3500, :, :, :]
+y_valid = y_train_All[2000:3500]
 
-X_train = X_train_All[0:2000, :, :, :]
-y_train = y_train_All[0:2000]
+X_train = X_train_All[0:1875, :, :, :]
+y_train = y_train_All[0:1875]
 
-X_Pool = X_train_All[3000:23000, :, :, :]
-y_Pool = y_train_All[3000:23000]
+X_Pool = X_train_All[4000:44000, :, :, :]
+y_Pool = y_train_All[4000:44000]
 
-X_test = X_test[0:2000, :, :, :]
-y_test = y_test[0:2000]
+# X_test = X_test[0:2000, :, :, :]
+# y_test = y_test[0:2000]
+
+
 
 print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
@@ -66,10 +68,13 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 4
-dropout_iterations = 5
+acquisition_iterations = 10
+dropout_iterations = 10
 Queries = 100
 
+Pool_Valid_Loss = np.zeros(shape=(nb_epoch, 1)) 	#row - no.of epochs, col (gets appended) - no of pooling
+Pool_Train_Loss = np.zeros(shape=(nb_epoch, 1)) 
+x_pool_All = np.zeros(shape=(1))
 
 
 for i in range(acquisition_iterations):
@@ -100,6 +105,11 @@ for i in range(acquisition_iterations):
 	Valid_Loss = np.asarray(Train_Result_Optimizer.get('val_loss'))
 	Valid_Loss = np.asarray([Valid_Loss]).T
 
+
+	#Accumulate the training and validation/test loss after every pooling iteration - for plotting
+	Pool_Valid_Loss = np.append(Pool_Valid_Loss, Valid_Loss, axis=1)
+	Pool_Train_Loss = np.append(Pool_Train_Loss, Train_Loss, axis=1)	
+
 	for d in range(dropout_iterations):
 		print ('Dropout Iteration', d)
 		score = model.predict(X_Pool,batch_size=batch_size, verbose=1)
@@ -111,13 +121,18 @@ for i in range(acquisition_iterations):
 	score2 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_2.npy')
 	score3 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_3.npy')
 	score4 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_4.npy')
+	score5 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_5.npy')
+	score6 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_6.npy')
+	score7 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_7.npy')
+	score8 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_8.npy')
+	score9 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_9.npy')
 
 	
 	All_Std = np.zeros(shape=(score.shape[0],score.shape[1]))
 	BayesSegnet_Sigma = np.zeros(shape=(score.shape[0],1))
-	for t in range(score1.shape[0]):
-		for r in range(score1.shape[1]):
-			L = [score0[t,r], score1[t,r], score2[t,r], score3[t,r], score4[t,r]]
+	for t in range(score.shape[0]):
+		for r in range(score.shape[1]):
+			L = [score0[t,r], score1[t,r], score2[t,r], score3[t,r], score4[t,r], score5[t,r], score6[t,r], score7[t,r], score8[t,r], score9[t,r]]
 			L = np.array([L])
 			L_std = np.std(L, axis=1)			
 			All_Std[t,r] = L_std
@@ -129,11 +144,16 @@ for i in range(acquisition_iterations):
 	a_1d = BayesSegnet_Sigma.flatten()
 	row = a_1d.argsort()[-Queries:][::-1]
 
+	#store all the pooled images indexes
+	x_pool_All = np.append(x_pool_All, row)
+
 	#saving pooled images
 	for im in range(row.shape[0]):
 		Image = X_Pool[row[im], :, :, :]
 		img = Image.reshape((28,28))
 		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Pooled_Images/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+
+
 
 
 	Pooled_X = X_Pool[row, 0:1, 0:28, 0:28]
@@ -192,17 +212,22 @@ for i in range(acquisition_iterations):
 
 
 
-# print('SIZE OF TRAINING DATA AFTER ACQUISITIONS', X_train.shape)
 
-# print('TEST THE MODEL ACCURACY')
-# # Compute the test error and accuracy 
-# score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
-# print('Test score:', score)
-# print('Test accuracy:', acc)
 
-# all_accuracy = np.append(all_accuracy, acc)
+np.savetxt("Bayes Segnet Accuracy Values.csv", all_accuracy, delimiter=",")
 
-np.savetxt("Highest Entropy Accuracy Values.csv", all_accuracy, delimiter=",")
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Results/'+'All_Train_Loss'+'.npy', Pool_Train_Loss)
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Results/'+ 'All_Valid_Loss'+'.npy', Pool_Valid_Loss)
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Results/'+'All_Pooled_Image_Index'+'.npy', x_pool_All)
+np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Results/'+ 'All_Accuracy_Results'+'.npy', all_accuracy)
+
+
+
+#to load again, and visualize the plots:
+#score4 = np.load('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_4.npy')
+
+
+
 
 
 # plt.figure(figsize=(8, 6), dpi=80)
