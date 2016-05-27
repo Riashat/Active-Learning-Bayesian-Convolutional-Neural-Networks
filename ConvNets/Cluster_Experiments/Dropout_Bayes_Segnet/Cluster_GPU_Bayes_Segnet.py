@@ -42,8 +42,8 @@ X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
 #after 50 iterations with 10 pools - we have 500 pooled points - use validation set outside of this
-X_valid = X_train_All[2000:2150, :, :, :]
-y_valid = y_train_All[2000:2150]
+X_valid = X_train_All[4000:4150, :, :, :]
+y_valid = y_train_All[4000:4150]
 
 
 X_train = X_train_All[0:200, :, :, :]
@@ -72,7 +72,7 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 150
+acquisition_iterations = 300
 
 #use a large number of dropout iterations
 dropout_iterations = 100
@@ -145,7 +145,7 @@ for e in range(Experiments):
 		for d in range(dropout_iterations):
 			print ('Dropout Iteration', d)
 			dropout_score = model.predict(X_Pool,batch_size=batch_size, verbose=1)
-			np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_'+str(d)+'.npy',dropout_score)
+			#np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_'+str(d)+'.npy',dropout_score)
 			All_Dropout_Scores = np.append(All_Dropout_Scores, dropout_score, axis=1)
 
 
@@ -169,10 +169,10 @@ for e in range(Experiments):
 		row = a_1d.argsort()[-Queries:][::-1]
 
 			#saving pooled images
-		for im in range(row.shape[0]):
+		for im in range(row[0:2].shape[0]):
 			Image = X_Pool[row[im], :, :, :]
 			img = Image.reshape((28,28))
-			sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Pooled_Images/'+ 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+			sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Pooled_Images/'+ 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 		Pooled_X = X_Pool[row, 0:1, 0:28, 0:28]
 		Pooled_Y = y_Pool[row]
@@ -244,16 +244,16 @@ for e in range(Experiments):
 
 
 	print('Saving Results Per Experiment')
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Results/'+'All_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Results/'+ 'All_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Results/'+'All_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Results/'+ 'All_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+'All_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+ 'All_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+'All_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+ 'All_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
 
 print('Saving Average Accuracy Over Experiments')
 
 Average_Accuracy = np.divide(Experiments_All_Accuracy, Experiments)
 
-np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Results/'+'Average_Accuracy'+'.npy', Average_Accuracy)
+np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+'Average_Accuracy'+'.npy', Average_Accuracy)
 
 
 

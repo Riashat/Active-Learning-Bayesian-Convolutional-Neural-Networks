@@ -41,8 +41,8 @@ X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
 
 #after 50 iterations with 10 pools - we have 500 pooled points - use validation set outside of this
-X_valid = X_train_All[2000:2150, :, :, :]
-y_valid = y_train_All[2000:2150]
+X_valid = X_train_All[4000:4150, :, :, :]
+y_valid = y_train_All[4000:4150]
 
 
 X_train = X_train_All[0:200, :, :, :]
@@ -72,7 +72,7 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 score=0
 all_accuracy = 0
 accuracy = 0
-acquisition_iterations = 150
+acquisition_iterations = 300
 
 #use a large number of dropout iterations
 Queries = 10
@@ -150,10 +150,10 @@ for e in range(Experiments):
 		x_pool_All = np.append(x_pool_All, x_pool_index)
 
 		#saving pooled images
-		for im in range(x_pool_index.shape[0]):
+		for im in range(x_pool_index[0:2].shape[0]):
 			Image = X_Pool[x_pool_index[im], :, :, :]
 			img = Image.reshape((28,28))
-			sp.misc.imsave(''+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+			sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Pooled_Images/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 	
 		X_train = np.concatenate((X_train, Pooled_X), axis=0)
@@ -192,35 +192,31 @@ for e in range(Experiments):
 		Pool_Valid_Loss = np.append(Pool_Valid_Loss, Valid_Loss, axis=1)
 		Pool_Train_Loss = np.append(Pool_Train_Loss, Train_Loss, axis=1)	
 
+		print('Evaluate Model Test Accuracy with pooled points')
 
-		evaluation_score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
+		score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
+		print('Test score:', score)
+		print('Test accuracy:', acc)
+		all_accuracy = np.append(all_accuracy, acc)
 
-		print('Test score:', evaluation_score[0])
-		print('Test accuracy:', evaluation_score[1])
-
-		eval_score = evaluation_score[0]
-		eval_accuracy = evaluation_score[1]
-
-		score = np.append(score, eval_score)
-		accuracy = np.append(accuracy, eval_accuracy)
 
 		print('Use this trained model with pooled points for Dropout again')
 
 	print('Storing Accuracy Values over experiments')
-	Experiments_All_Accuracy = Experiments_All_Accuracy + accuracy
+	Experiments_All_Accuracy = Experiments_All_Accuracy + all_accuracy
 
 
 	print('Saving Results Per Experiment')
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/GPU/Results/'+'All_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/GPU/Results/'+ 'All_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/GPU/Results/'+'All_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
-	np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/GPU/Results/'+ 'All_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', accuracy)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+'All_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+ 'All_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+'All_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+ 'All_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', accuracy)
 
 print('Saving Average Accuracy Over Experiments')
 
 Average_Accuracy = np.divide(Experiments_All_Accuracy, Experiments)
 
-np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/GPU/Results/'+'Average_Accuracy'+'.npy', Average_Accuracy)
+np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+'Average_Accuracy'+'.npy', Average_Accuracy)
 
 
 
