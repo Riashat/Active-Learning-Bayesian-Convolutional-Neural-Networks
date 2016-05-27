@@ -34,42 +34,6 @@ nb_pool = 2
 nb_conv = 3
 
 
-# the data, shuffled and split between tran and test sets
-(X_train_All, y_train_All), (X_test, y_test) = mnist.load_data()
-
-X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
-X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
-
-
-#after 50 iterations with 10 pools - we have 500 pooled points - use validation set outside of this
-X_valid = X_train_All[4000:4150, :, :, :]
-y_valid = y_train_All[4000:4150]
-
-
-X_train = X_train_All[0:200, :, :, :]
-y_train = y_train_All[0:200]
-
-X_Pool = X_train_All[5000:15000, :, :, :]
-y_Pool = y_train_All[5000:15000]
-
-
-print('X_train shape:', X_train.shape)
-print(X_train.shape[0], 'train samples')
-
-
-X_train = X_train.astype('float32')
-X_test = X_test.astype('float32')
-X_valid = X_valid.astype('float32')
-X_Pool = X_Pool.astype('float32')
-X_train /= 255
-X_valid /= 255
-X_Pool /= 255
-X_test /= 255
-
-Y_test = np_utils.to_categorical(y_test, nb_classes)
-Y_valid = np_utils.to_categorical(y_valid, nb_classes)
-Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
-
 score=0
 all_accuracy = 0
 acquisition_iterations = 300
@@ -83,6 +47,44 @@ Experiments_All_Accuracy = np.zeros(shape=(acquisition_iterations+1))
 for e in range(Experiments):
 
 	print('Experiment Number ', e)
+
+
+	#the data, shuffled and split between tran and test sets
+	(X_train_All, y_train_All), (X_test, y_test) = mnist.load_data()
+
+	X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
+	X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
+
+
+	#after 50 iterations with 10 pools - we have 500 pooled points - use validation set outside of this
+	X_valid = X_train_All[4000:4150, :, :, :]
+	y_valid = y_train_All[4000:4150]
+
+
+	X_train = X_train_All[0:200, :, :, :]
+	y_train = y_train_All[0:200]
+
+	X_Pool = X_train_All[5000:15000, :, :, :]
+	y_Pool = y_train_All[5000:15000]
+
+
+	print('X_train shape:', X_train.shape)
+	print(X_train.shape[0], 'train samples')
+
+
+	X_train = X_train.astype('float32')
+	X_test = X_test.astype('float32')
+	X_valid = X_valid.astype('float32')
+	X_Pool = X_Pool.astype('float32')
+	X_train /= 255
+	X_valid /= 255
+	X_Pool /= 255
+	X_test /= 255
+
+	Y_test = np_utils.to_categorical(y_test, nb_classes)
+	Y_valid = np_utils.to_categorical(y_valid, nb_classes)
+	Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
+
 
 	#loss values in each experiment
 	Pool_Valid_Loss = np.zeros(shape=(nb_epoch, 1)) 	#row - no.of epochs, col (gets appended) - no of pooling
