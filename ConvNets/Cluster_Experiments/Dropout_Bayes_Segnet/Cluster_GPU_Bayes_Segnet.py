@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
 
 
-Experiments = 5
+Experiments = 3
 
 batch_size = 128
 nb_classes = 10
@@ -171,10 +171,10 @@ for e in range(Experiments):
 		row = a_1d.argsort()[-Queries:][::-1]
 
 			#saving pooled images
-		for im in range(row[0:2].shape[0]):
-			Image = X_Pool[row[im], :, :, :]
-			img = Image.reshape((28,28))
-			sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Pooled_Images/'+ 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+		# for im in range(row[0:2].shape[0]):
+		# 	Image = X_Pool[row[im], :, :, :]
+		# 	img = Image.reshape((28,28))
+			#sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Pooled_Images/'+ 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 		Pooled_X = X_Pool[row, 0:1, 0:28, 0:28]
 		Pooled_Y = y_Pool[row]

@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
 
 
-Experiments = 5
+Experiments = 3
 
 batch_size = 128
 nb_classes = 10
@@ -158,10 +158,10 @@ for e in range(Experiments):
 		# x_pool_index = a_1d.argsort()[-N:]
 
 		#saving pooled images
-		for im in range(x_pool_index[0:2].shape[0]):
-			Image = X_Pool[x_pool_index[im], :, :, :]
-			img = Image.reshape((28,28))
-			sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Max_Entropy/Pooled_Images/' + 'Experiment_' + str(e) +'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+		# for im in range(x_pool_index[0:2].shape[0]):
+		# 	Image = X_Pool[x_pool_index[im], :, :, :]
+		# 	img = Image.reshape((28,28))
+		# 	sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Max_Entropy/Pooled_Images/' + 'Experiment_' + str(e) +'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 		#store all the pooled images indexes
 		x_pool_All = np.append(x_pool_All, x_pool_index)
