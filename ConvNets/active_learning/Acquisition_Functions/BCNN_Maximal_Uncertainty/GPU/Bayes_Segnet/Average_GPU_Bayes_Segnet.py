@@ -22,7 +22,7 @@ batch_size = 128
 nb_classes = 10
 
 #use a large number of epochs
-nb_epoch = 1
+nb_epoch = 10
 
 # input image dimensions
 img_rows, img_cols = 28, 28
