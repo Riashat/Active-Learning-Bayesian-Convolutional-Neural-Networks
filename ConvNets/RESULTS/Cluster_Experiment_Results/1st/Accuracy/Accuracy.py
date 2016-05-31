@@ -1,0 +1,38 @@
+# http://www.scipy-lectures.org/intro/matplotlib/matplotlib.html
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+Bald = np.load('BALD.npy')
+Highest_Entropy = np.load('Max_Entropy.npy')
+Highest_Entropy = Highest_Entropy[0:31]
+
+
+Bayes_Segnet = np.load('Segnet.npy')
+BCNN_Entropy = np.load('Dropout_Max_Entropy.npy')
+Random = np.load('Random.npy')
+Random = Random[0:31]
+Variation = np.load('Variation_Ratio.npy')
+
+
+Queries = np.arange(0, 3100, 100)
+
+plt.figure(figsize=(12, 8), dpi=80)
+
+plt.plot(Queries, Bald, color="red", linewidth=1.0, marker='x', label="Dropout BALD" )
+plt.plot(Queries, Bayes_Segnet, color="blue", linewidth=1.0, marker='x', label="Dropout Bayes Segnet")
+plt.plot(Queries, BCNN_Entropy, color="black", linewidth=1.0, marker='x', label="Dropout - Max Entropy")
+plt.plot(Queries, Highest_Entropy, color="green",linewidth=1.0, marker='x', label="Max Entropy" )
+plt.plot(Queries, Random, color="magenta",linewidth=1.0, marker='x', label="Random Acquisition" )
+plt.plot(Queries, Variation, color="yellow",linewidth=1.0, marker='x', label="Dropout - Variation Ratio" )
+
+
+plt.xlabel('Number of Queries')
+plt.ylabel('Accuracy on Test Set')
+plt.title('Comparing Acquisition Functions')
+plt.grid()
+# Set x limits
+# plt.xlim(1000.0, 10000.0)
+# plt.ylim(0.8, 1.0)
+plt.legend(loc = 3)
+plt.show()
