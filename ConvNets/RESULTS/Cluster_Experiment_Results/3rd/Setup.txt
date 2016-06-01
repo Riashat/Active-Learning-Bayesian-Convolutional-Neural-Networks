@@ -1,0 +1,11 @@
+No. of epochs = 50
+
+Acquisition Iterations = 15
+
+Queries = 100
+
+Epochs = 50
+
+Validation Points = 500
+
+Starting Training Data: 200

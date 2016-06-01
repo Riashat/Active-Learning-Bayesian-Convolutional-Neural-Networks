@@ -1,0 +1,8 @@
+Epochs = 20
+
+Acquisition Iterations = 30
+
+Queries = 100
+
+Validation Points = 150
+
