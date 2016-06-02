@@ -192,7 +192,7 @@ for e in range(Experiments):
 		x_pool_All = np.append(x_pool_All, x_pool_index)
 
 		#saving pooled images
-		for im in range(x_pool_index.shape[0]):
+		for im in range(x_pool_index[0:2].shape[0]):
 			Image = X_Pool[x_pool_index[im], :, :, :]
 			img = Image.reshape((28,28))
 			sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/GPU/BALD/Pooled_Images/' + 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)

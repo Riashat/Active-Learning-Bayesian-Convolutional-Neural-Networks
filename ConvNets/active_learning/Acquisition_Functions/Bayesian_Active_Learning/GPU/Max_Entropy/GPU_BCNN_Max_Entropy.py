@@ -19,7 +19,7 @@ batch_size = 128
 nb_classes = 10
 
 #use a large number of epochs
-nb_epoch = 20
+nb_epoch = 50
 
 
 # input image dimensions
@@ -69,10 +69,10 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 50
+acquisition_iterations = 100
 
 #use a large number of dropout iterations
-dropout_iterations = 50
+dropout_iterations = 100
 
 Queries = 10
 
@@ -161,7 +161,7 @@ for i in range(acquisition_iterations):
 	x_pool_All = np.append(x_pool_All, x_pool_index)
 
 	#saving pooled images
-	for im in range(x_pool_index.shape[0]):
+	for im in range(2):
 		Image = X_Pool[x_pool_index[im], :, :, :]
 		img = Image.reshape((28,28))
 		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/GPU/Max_Entropy/Pooled_Images/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)

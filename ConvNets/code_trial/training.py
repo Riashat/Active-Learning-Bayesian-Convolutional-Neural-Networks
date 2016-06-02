@@ -23,6 +23,11 @@ from six.moves import range
 import numpy as np
 import scipy as sp
 from keras import backend as K  
+
+
+
+
+
 batch_size = 32
 nb_classes = 10
 nb_epoch = 200
@@ -88,12 +93,20 @@ print("YODA Layer-output shape",layer_output.shape)
 loss = K.mean(layer_output[:,filter_index])
 
 model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch)
+
+
+
 input_img_data = [X_train[0,:,:,:]]
 sp.misc.imsave('test.jpg',input_img_data)
+
+
+
 input_img = model.get_input() 
 score = model.evaluate(X_test, Y_test, batch_size=batch_size)
 grads = K.gradients(loss,input_img)
 iterate = K.function([input_img], [loss, grads])
+
+
 print("YODA_1")
 step = 0.01
 for i in range(10):
@@ -105,8 +118,10 @@ print("YODA")
 json_string = model.to_json()
 open('model_200_arch.json', 'w').write(json_string)
 model.save_weights('model_200_weights.h5')
-#for i in range(1):
-#    score = model.predict_stochastic(X_test,batch_size=batch_size)
-#    np.save('/home/ar773/CNN/keras/examples/scores/score'+str(i)+'.npy',score)
-#print('Test score:', score)
-#loop the predict 10 times, average over the trials and take a argmax for correct label
+
+
+for i in range(1):
+   score = model.predict_stochastic(X_test,batch_size=batch_size)
+   np.save('/home/ar773/CNN/keras/examples/scores/score'+str(i)+'.npy',score)
+print('Test score:', score)
+loop the predict 10 times, average over the trials and take a argmax for correct label

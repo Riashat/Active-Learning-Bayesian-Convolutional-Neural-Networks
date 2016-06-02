@@ -482,10 +482,10 @@ class Sequential(Model, containers.Sequential):
         self._test_with_acc = K.function(test_ins, [test_loss, test_accuracy], updates=self.state_updates)
 
 
-        #self._predict_stochastic = K.function(predict_ins, [self.y_train], updates=self.state_updates)
-        #self._predict_stochastic = K.function(predict_ins, [self.y_train], allow_input_downcast=True, mode=theano_mode)
+        self._predict_stochastic = K.function(predict_ins, [self.y_train], updates=self.state_updates)
+        #self._predict_stochastic = K.function(predict_ins, self.y_train, allow_input_downcast=True, mode=theano_mode)
 
-        #self._predict = K.function(predict_ins, [self.y_train], updates=self.state_updates)
+        self._predict = K.function(predict_ins, [self.y_test], updates=self.state_updates)
         #self._predict = K.function(predict_ins, self.y_train, allow_input_downcast=True, mode=theano_mode)
 
     
@@ -626,25 +626,26 @@ class Sequential(Model, containers.Sequential):
         # Returns
             A numpy array of predictions.
         '''
-
+        print('Without Test Time Dropout')
         X = standardize_X(X)
         return self._predict_loop(self._predict, X, batch_size, verbose)[0]
 
 
-    # def predict_stochastic(self, X, batch_size=128, verbose=0):
-    #     '''Generate output predictions for the input samples
-    #     batch by batch.
+    def predict_stochastic(self, X, batch_size=128, verbose=0):
+        '''Generate output predictions for the input samples
+        batch by batch.
 
-    #     # Arguments
-    #         X: the input data, as a numpy array.
-    #         batch_size: integer.
-    #         verbose: verbosity mode, 0 or 1.
+        # Arguments
+            X: the input data, as a numpy array.
+            batch_size: integer.
+            verbose: verbosity mode, 0 or 1.
 
-    #     # Returns
-    #         A numpy array of predictions.
-    #     '''
-    #     X = standardize_X(X)
-    #     return self._predict_loop(self._predict_stochastic, X, batch_size, verbose)[0]
+        # Returns
+            A numpy array of predictions.
+        '''
+        print('Test Time Dropoout')
+        X = standardize_X(X)
+        return self._predict_loop(self._predict_stochastic, X, batch_size, verbose)[0]
 
 
     def predict_proba(self, X, batch_size=128, verbose=1):
@@ -677,6 +678,25 @@ class Sequential(Model, containers.Sequential):
             A numpy array of class predictions.
         '''
         proba = self.predict(X, batch_size=batch_size, verbose=verbose)
+        if self.class_mode == 'categorical':
+            return proba.argmax(axis=-1)
+        else:
+            return (proba > 0.5).astype('int32')
+
+    def predict_classes_stochastic(self, X, batch_size=128, verbose=1):
+        '''Generate class predictions for the input samples
+        batch by batch.
+
+        # Arguments
+            X: the input data, as a numpy array.
+            batch_size: integer.
+            verbose: verbosity mode, 0 or 1.
+
+        # Returns
+            A numpy array of class predictions.
+        '''
+        print('Test Time Dropout For Predict Classes')
+        proba = self.predict_stochastic(X, batch_size=batch_size, verbose=verbose)
         if self.class_mode == 'categorical':
             return proba.argmax(axis=-1)
         else:

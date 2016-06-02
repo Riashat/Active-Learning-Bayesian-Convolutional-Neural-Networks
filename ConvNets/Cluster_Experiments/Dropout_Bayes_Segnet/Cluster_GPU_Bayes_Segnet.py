@@ -145,7 +145,7 @@ for e in range(Experiments):
 		print('Use trained model for test time dropout')
 		for d in range(dropout_iterations):
 			print ('Dropout Iteration', d)
-			dropout_score = model.predict(X_Pool,batch_size=batch_size, verbose=1)
+			dropout_score = model.predict_stochastic(X_Pool,batch_size=batch_size, verbose=1)
 			#np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/GPU/Bayes_Segnet/Dropout_Scores/'+'Dropout_Score_'+str(d)+'.npy',dropout_score)
 			All_Dropout_Scores = np.append(All_Dropout_Scores, dropout_score, axis=1)
 

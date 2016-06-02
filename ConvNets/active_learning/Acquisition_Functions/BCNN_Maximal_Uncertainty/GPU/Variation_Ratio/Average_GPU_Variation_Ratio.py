@@ -157,8 +157,7 @@ for e in range(Experiments):
 		for t in range(X_Pool.shape[0]):
 			L = np.array([0])
 			for d_iter in range(dropout_iterations):
-				L = np.append(L, All_Dropout_Classes[t, d_iter+1])			
-			print('Computing Variation Ratio')			
+				L = np.append(L, All_Dropout_Classes[t, d_iter+1])					
 			Predicted_Class, Mode = mode(L[1:])
 			v = np.array(  [1 - Mode/float(dropout_iterations)])
 			Variation[t] = v
@@ -180,7 +179,7 @@ for e in range(Experiments):
 		Pooled_X = X_Pool[x_pool_index, 0:1, 0:28, 0:28]
 		Pooled_Y = y_Pool[x_pool_index]
 
-		delete_std = np.delete(BayesSegnet_Sigma, (x_pool_index), axis=0)
+		delete_std = np.delete(Variation, (x_pool_index), axis=0)
 		delete_Pool_X = np.delete(X_Pool, (x_pool_index), axis=0)
 		delete_Pool_Y = np.delete(y_Pool, (x_pool_index), axis=0)
 

@@ -149,7 +149,7 @@ for e in range(Experiments):
 
 		for d in range(dropout_iterations):
 			print ('Dropout Iteration', d)
-			dropout_score = model.predict(X_Pool,batch_size=batch_size, verbose=1)
+			dropout_score = model.predict_stochastic(X_Pool,batch_size=batch_size, verbose=1)
 			#np.save(''+'Dropout_Score_'+str(d)+'Experiment_' + str(e)+'.npy',dropout_score)
 			score_All = score_All + dropout_score
 

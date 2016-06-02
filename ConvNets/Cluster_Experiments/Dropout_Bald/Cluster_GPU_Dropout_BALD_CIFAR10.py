@@ -153,7 +153,7 @@ for e in range(Experiments):
 
 		for d in range(dropout_iterations):
 			print ('Dropout Iteration', d)
-			dropout_score = model.predict(X_Pool,batch_size=batch_size, verbose=1)
+			dropout_score = model.predict_stochastic(X_Pool,batch_size=batch_size, verbose=1)
 			# np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/GPU/BALD/Dropout_Scores/'+ 'CIFAR10_Experiment_' + str(e)  + '_Dropout_Score_'+str(d)+'.npy',dropout_score)
 			#computing G_X
 			score_All = score_All + dropout_score

@@ -151,7 +151,7 @@ for e in range(Experiments):
 
 		for d in range(dropout_iterations):
 			print ('Dropout Iteration', d)
-			dropout_classes = model.predict_classes(X_Pool,batch_size=batch_size, verbose=1)
+			dropout_classes = model.predict_classes_stochastic(X_Pool,batch_size=batch_size, verbose=1)
 			dropout_classes = np.array([dropout_classes]).T
 			#np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Variation_Ratio/Dropout_Scores/'+'Dropout_Score_'+str(d)+'.npy',dropout_classes)
 			All_Dropout_Classes = np.append(All_Dropout_Classes, dropout_classes, axis=1)

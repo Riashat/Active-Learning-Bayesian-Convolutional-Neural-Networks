@@ -17,7 +17,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 1
+nb_epoch = 50
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -55,7 +55,7 @@ print(X_train.shape[0], 'train samples')
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 2
+acquisition_iterations = 100
 
 #Number of Queries to make every iteration
 Queries = 10
@@ -143,7 +143,7 @@ for i in range(acquisition_iterations):
 	# x_pool_index = a_1d.argsort()[-N:]
 
 		#saving pooled images
-	for im in range(x_pool_index.shape[0]):
+	for im in range(2):
 		Image = X_Pool[x_pool_index[im], :, :, :]
 		img = Image.reshape((28,28))
 		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Maximum_Entropy/GPU/Pooled_Images/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)

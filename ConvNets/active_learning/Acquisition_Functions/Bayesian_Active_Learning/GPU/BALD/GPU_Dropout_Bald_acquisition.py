@@ -18,7 +18,7 @@ from keras.regularizers import l2, activity_l2
 
 batch_size = 128
 nb_classes = 10
-nb_epoch = 1
+nb_epoch = 50
 
 
 # input image dimensions
@@ -76,8 +76,8 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 2
-dropout_iterations = 5
+acquisition_iterations = 100
+dropout_iterations = 100
 Queries = 10
 
 Pool_Valid_Loss = np.zeros(shape=(nb_epoch, 1)) 	#row - no.of epochs, col (gets appended) - no of pooling
@@ -175,7 +175,7 @@ for i in range(acquisition_iterations):
 
 
 	#saving pooled images
-	for im in range(x_pool_index.shape[0]):
+	for im in range(2):
 		Image = X_Pool[x_pool_index[im], :, :, :]
 		img = Image.reshape((28,28))
 		sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/GPU/BALD/Pooled_Images/' + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)

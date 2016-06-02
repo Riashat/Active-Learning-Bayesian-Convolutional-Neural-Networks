@@ -1,0 +1,17 @@
+
+
+- Number of Epochs = 50
+
+- Queries every iteration: 20
+
+- Pooling Iterations = 20
+
+Starting Training Data Size: 200
+
+Total Acquisitions Made: 400
+
+Final Training Dataset Size: 600
+
+
+Validation Set : 150
+

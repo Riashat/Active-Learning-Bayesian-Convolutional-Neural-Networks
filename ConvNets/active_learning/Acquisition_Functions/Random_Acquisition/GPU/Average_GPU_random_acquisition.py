@@ -72,6 +72,7 @@ Y_Pool = np_utils.to_categorical(y_Pool, nb_classes)
 
 score=0
 all_accuracy = 0
+accuracy = 0
 acquisition_iterations = 2
 
 #use a large number of dropout iterations
@@ -152,8 +153,8 @@ for e in range(Experiments):
 		#saving pooled images
 		for im in range(x_pool_index.shape[0]):
 			Image = X_Pool[x_pool_index[im], :, :, :]
-			immg = Image.reshape((28,28))
-			sp.misc.imsave(''+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
+			img = Image.reshape((28,28))
+			sp.misc.imsave('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Random_Acquisition/GPU/Results/'+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 	
 		X_train = np.concatenate((X_train, Pooled_X), axis=0)
@@ -193,21 +194,18 @@ for e in range(Experiments):
 		Pool_Train_Loss = np.append(Pool_Train_Loss, Train_Loss, axis=1)	
 
 
-		evaluation_score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
+		print('Evaluate Model Test Accuracy with pooled points')
 
-		print('Test score:', evaluation_score[0])
-		print('Test accuracy:', evaluation_score[1])
+		score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
+		print('Test score:', score)
+		print('Test accuracy:', acc)
+		all_accuracy = np.append(all_accuracy, acc)
 
-		eval_score = evaluation_score[0]
-		eval_accuracy = evaluation_score[1]
-
-		score = np.append(score, eval_score)
-		accuracy = np.append(accuracy, eval_accuracy)
-
+		
 		print('Use this trained model with pooled points for Dropout again')
 
 	print('Storing Accuracy Values over experiments')
-	Experiments_All_Accuracy = Experiments_All_Accuracy + accuracy
+	Experiments_All_Accuracy = Experiments_All_Accuracy + all_accuracy
 
 
 	print('Saving Results Per Experiment')

@@ -95,5 +95,8 @@ model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, show_accur
 score= model.predict(X_test,batch_size=batch_size, verbose=1)
 score2= model.predict(X_test,batch_size=batch_size, verbose=1)
 
+print('USING PREDICT_STOCHASTIC FUNCTION')
 
+score3 = model.predict_stochastic(X_test,batch_size=batch_size, verbose=1)
+score4 = model.predict_stochastic(X_test,batch_size=batch_size, verbose=1)
 

@@ -20,13 +20,16 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.optimizers import SGD, Adadelta, Adagrad
 from keras.utils import np_utils, generic_utils
 from six.moves import range
+import numpy as np
+import scipy as sp
+from keras import backend as K  
 
 
 
 batch_size = 32
 nb_classes = 10
 #nb_epoch = 200
-nb_epoch = 1
+nb_epoch = 3
 data_augmentation = False
 
 # input image dimensions
@@ -46,28 +49,17 @@ print('y_test shape:', y_test.shape)
 
 print ('Using poritions of the training and test sets')
 
-X_train = X_train[0:1100, 0:3,0:32,0:32]
-y_train = y_train[0:1100, 0]
+X_train = X_train[0:1000, 0:3,0:32,0:32]
+y_train = y_train[0:1000, 0]
 
-X_test = X_test[0:1000,0:3,0:32,0:32]
-y_test = y_test[0:1000,0]
+X_test = X_test[0:500,0:3,0:32,0:32]
+y_test = y_test[0:500,0]
 
 
 print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
 print(X_test.shape[0], 'test samples')
 
-
-'''Original size of the cifar10 dataset
-X_train shape: (50000, 3, 32, 32)
-y_train shape: (50000, 1)
-X_test shape: (10000, 3, 32, 32)
-y_test shape: (10000, 1)
-Using poritions of the training and test sets
-X_train shape: (1000, 3, 32, 32)
-1000 train samples
-100 test samples
-'''
 
 # convert class vectors to binary class matrices
 Y_train = np_utils.to_categorical(y_train, nb_classes)
@@ -100,10 +92,6 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-#Flatten used to Flatten the input : 64*32*32 to the product of these (65536)
-
-# Dense: just the regular fully connected NN layer
-# Dense(512) means - output arrays of shape (*, 512)
 model.add(Flatten())
 model.add(Dense(512))
 model.add(Activation('relu'))
@@ -112,17 +100,9 @@ model.add(Dense(nb_classes))
 model.add(Activation('softmax'))
 
 
-
 # let's train the model using SGD + momentum (how original).
-# SGD from Optimizers
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-
-# Once your model looks good, configure its learning process with .compile():
-# also using the Objective function "categorical_crossentropy" or can use "mean_squared_error" here
-#model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-
 model.compile(loss='categorical_crossentropy', optimizer=sgd)
-
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
@@ -141,45 +121,65 @@ if not data_augmentation:
     model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch)
 
 
-    score = model.evaluate(X_test, Y_test, batch_size=batch_size, verbose=1)
+    # score = model.evaluate(X_test, Y_test, batch_size=batch_size, verbose=1)
     # print('Test score:', score[0])
     # print('Test accuracy:', score[1])
 
+    score1 = model.predict(X_test, batch_size=batch_size, verbose=1)
+    score2 = model.predict(X_test, batch_size=batch_size, verbose=1)
 
-else:
-    print('Using real time data augmentation')
+    # for i in range(2):
+    #     score = model.predict(X_test, batch_size=batch_size, verbose=1)
+    #     print('Test score:', score)
 
-    # this will do preprocessing and realtime data augmentation
-    datagen = ImageDataGenerator(
-        featurewise_center=True,  # set input mean to 0 over the dataset
-        samplewise_center=False,  # set each sample mean to 0
-        featurewise_std_normalization=True,  # divide inputs by std of the dataset
-        samplewise_std_normalization=False,  # divide each input by its std
-        zca_whitening=False,  #apply ZCA whitening
-        rotation_range=20,  #randomly rotate images in the range (degrees, 0 to 180)
-        width_shift_range=0.2,  #randomly shift images horizontally (fraction of total width)
-        height_shift_range=0.2,  #randomly shift images vertically (fraction of total height)
-        horizontal_flip=True,  #randomly flip images
-        vertical_flip=False)  #randomly flip images
 
-    # compute quantities required for featurewise normalization
-    # (std, mean, and principal components if ZCA whitening is applied)
-    datagen.fit(X_train)
 
-    for e in range(nb_epoch):
-        print('-'*40)
-        print('Epoch', e)
-        print('-'*40)
-        print('Training...')
-        # batch train with realtime data augmentation
-        progbar = generic_utils.Progbar(X_train.shape[0])
-        for X_batch, Y_batch in datagen.flow(X_train, Y_train):
-            loss = model.train_on_batch(X_batch, Y_batch)
-            progbar.add(X_batch.shape[0], values=[('train loss', loss[0])])
 
-        print('Testing...')
-        # test time!
-        progbar = generic_utils.Progbar(X_test.shape[0])
-        for X_batch, Y_batch in datagen.flow(X_test, Y_test):
-            score = model.test_on_batch(X_batch, Y_batch)
-            progbar.add(X_batch.shape[0], values=[('test loss', score[0])])
+
+
+
+
+
+
+
+
+
+
+
+# else:
+#     print('Using real time data augmentation')
+
+#     # this will do preprocessing and realtime data augmentation
+#     datagen = ImageDataGenerator(
+#         featurewise_center=True,  # set input mean to 0 over the dataset
+#         samplewise_center=False,  # set each sample mean to 0
+#         featurewise_std_normalization=True,  # divide inputs by std of the dataset
+#         samplewise_std_normalization=False,  # divide each input by its std
+#         zca_whitening=False,  #apply ZCA whitening
+#         rotation_range=20,  #randomly rotate images in the range (degrees, 0 to 180)
+#         width_shift_range=0.2,  #randomly shift images horizontally (fraction of total width)
+#         height_shift_range=0.2,  #randomly shift images vertically (fraction of total height)
+#         horizontal_flip=True,  #randomly flip images
+#         vertical_flip=False)  #randomly flip images
+
+#     # compute quantities required for featurewise normalization
+#     # (std, mean, and principal components if ZCA whitening is applied)
+#     datagen.fit(X_train)
+
+#     for e in range(nb_epoch):
+#         print('-'*40)
+#         print('Epoch', e)
+#         print('-'*40)
+#         print('Training...')
+#         # batch train with realtime data augmentation
+#         progbar = generic_utils.Progbar(X_train.shape[0])
+#         for X_batch, Y_batch in datagen.flow(X_train, Y_train):
+#             loss = model.train_on_batch(X_batch, Y_batch)
+#             progbar.add(X_batch.shape[0], values=[('train loss', loss[0])])
+
+#         print('Testing...')
+#         # test time!
+#         progbar = generic_utils.Progbar(X_test.shape[0])
+#         for X_batch, Y_batch in datagen.flow(X_test, Y_test):
+#             score = model.test_on_batch(X_batch, Y_batch)
+#             progbar.add(X_batch.shape[0], values=[('test loss', score[0])])

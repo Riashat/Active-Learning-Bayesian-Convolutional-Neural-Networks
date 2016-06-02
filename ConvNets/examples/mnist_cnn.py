@@ -34,6 +34,8 @@ nb_conv = 3
 
 X_train = X_train.reshape(X_train.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
+
+
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
 X_train /= 255
@@ -71,8 +73,8 @@ model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
 
 score= model.predict(X_test,batch_size=batch_size, verbose=1)
 score2= model.predict(X_test,batch_size=batch_size, verbose=1)
-score3= model.predict(X_test,batch_size=batch_size, verbose=1)
-score4= model.predict(X_test,batch_size=batch_size, verbose=1)
+score3= model.predict(X_test,batch_size=batch_size, verbose=0)
+score4= model.predict(X_test,batch_size=batch_size, verbose=0)
 
 
 
