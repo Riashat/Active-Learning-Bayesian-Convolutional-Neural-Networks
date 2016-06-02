@@ -119,20 +119,20 @@ for e in range(Experiments):
 	model.add(Activation('softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam')
-	hist = model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, show_accuracy=True, verbose=1, validation_data=(X_valid, Y_valid))
-	Train_Result_Optimizer = hist.history
-	Train_Loss = np.asarray(Train_Result_Optimizer.get('loss'))
-	Train_Loss = np.array([Train_Loss]).T
-	Valid_Loss = np.asarray(Train_Result_Optimizer.get('val_loss'))
-	Valid_Loss = np.asarray([Valid_Loss]).T
+	# hist = model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, show_accuracy=True, verbose=1, validation_data=(X_valid, Y_valid))
+	# Train_Result_Optimizer = hist.history
+	# Train_Loss = np.asarray(Train_Result_Optimizer.get('loss'))
+	# Train_Loss = np.array([Train_Loss]).T
+	# Valid_Loss = np.asarray(Train_Result_Optimizer.get('val_loss'))
+	# Valid_Loss = np.asarray([Valid_Loss]).T
 
-	Pool_Train_Loss = Train_Loss
-	Pool_Valid_Loss = Valid_Loss
+	# Pool_Train_Loss = Train_Loss
+	# Pool_Valid_Loss = Valid_Loss
 
-	print('Evaluating Test Accuracy Without Acquisition')
-	score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
+	# print('Evaluating Test Accuracy Without Acquisition')
+	# score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
 
-	all_accuracy = acc
+	# all_accuracy = acc
 
 	print('Starting Active Learning in Experiment ', e)
 
