@@ -1,0 +1,357 @@
+% Use the grid pitches from 
+% http://www.admin.cam.ac.uk/offices/communications/services/identityguidelines/guidelines-graphiclanguage.pdf
+% 
+% In essence we want the vertical pitch to be such that there are 30 steps.
+% This is based on the PowerPoint template sizes.
+%
+\newlength{\cam@inner@pitch} \setlength{\cam@inner@pitch}{0.0333333\paperheight} 
+
+% The University logo
+\pgfdeclareimage[height=2\cam@inner@pitch]{beamertitlelogocambridge}{uc-cmyk}
+
+\mode<presentation>
+
+\setbeamercolor{special page canvas}{parent=title}
+\setbeamercolor{special page title}{use={special page canvas,palette secondry},parent=special page canvas,bg=special page canvas.bg!80!palette secondry.bg}
+\setbeamercolor{special page separator upper}{use=special page canvas,parent=special page canvas,bg=special page canvas.bg!33!white}
+\setbeamercolor{special page separator lower}{use=special page canvas,parent=special page canvas,bg=special page canvas.bg!33!black}
+
+\setbeamercolor{special page frame number}{parent=part title,fg=white!75}
+\setbeamerfont{special page frame number}{size=\tiny}
+
+\setbeamerfont{date}{size=\tiny,series=\bfseries}
+\setbeamerfont{part title}{size=\LARGE}
+\setbeamerfont{part name}{size=\LARGE}
+\setbeamerfont{abstract title}{size=\LARGE}
+
+\setbeamercolor{title page canvas}{parent=normal text}
+\setbeamercolor{title page author}{parent=author}
+\setbeamercolor{title page date}{parent=date}
+
+\setbeamercolor{part page canvas}{parent=special page canvas}
+\setbeamercolor{part page title}{parent=special page title}
+\setbeamercolor{part page separator upper}{parent=special page separator upper}
+\setbeamercolor{part page separator lower}{parent=special page separator lower}
+\setbeamercolor{part page frame number}{parent=special page frame number}
+\setbeamerfont{part page frame number}{parent=special page frame number}
+
+\setbeamercolor{abstract page canvas}{parent=special page canvas}
+\setbeamercolor{abstract page title}{parent=special page title}
+\setbeamercolor{abstract page separator upper}{parent=special page separator upper}
+\setbeamercolor{abstract page separator lower}{parent=special page separator lower}
+\setbeamercolor{abstract page frame number}{parent=special page frame number}
+\setbeamerfont{abstract page frame number}{parent=special page frame number}
+
+\newlength{\oversized@paperwidth}
+\newlength{\oversized@paperheight}
+
+% Title page
+
+\newcommand{\start@fullpage}[1]{
+  \setlength{\oversized@paperwidth}{\paperwidth}\addtolength{\oversized@paperwidth}{0.25em}
+  \setlength{\oversized@paperheight}{\paperheight}\addtolength{\oversized@paperheight}{0.25em}
+  %
+  % HACK: Beamer always inserts a 0.125em space after the frame title, even if it is
+  % empty. We hack around this by skipping upwards and using a slightly oversized
+  % box to draw the background.
+  \vskip-0.125em%
+  %
+  \color@bar[ht=\oversized@paperheight]{#1}
+  \vskip-\oversized@paperheight
+}
+
+\newcommand{\color@bar}[2][]{
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,ht=\oversized@paperheight,#1]{#2}
+    \null
+  \end{beamercolorbox}\nointerlineskip
+}
+
+\defbeamertemplate*{title page}{cambridge theme}[1][]
+{%
+  \start@fullpage{title page canvas}
+  %
+  % Insert titlegraphic
+  \vskip2\cam@inner@pitch
+  {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \vskip2\cam@inner@pitch
+  \vskip0pt plus 1filll
+  %
+  % The title itself
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,sep=\cam@inner@pitch,leftskip=\cam@inner@pitch,rightskip=\cam@inner@pitch,#1]{title}
+    \usebeamerfont{title}\inserttitle\par%
+    \ifx\insertsubtitle\@empty%
+    \else%
+      \vskip\cam@inner@pitch%
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+    \fi%     
+  \end{beamercolorbox}\nointerlineskip%
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,sep=0.5\cam@inner@pitch,leftskip=1.5\cam@inner@pitch,rightskip=1.5\cam@inner@pitch,#1]{title page author}
+    {\usebeamerfont{author}\insertauthor\par}
+    \ifx\insertinstitute\@empty
+    \else
+      \vskip\cam@inner@pitch
+      {\usebeamerfont{institute}\insertinstitute\par}
+    \fi
+  \end{beamercolorbox}\nointerlineskip%
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,sep=0.5\cam@inner@pitch,leftskip=1.5\cam@inner@pitch,rightskip=1.5\cam@inner@pitch,#1]{title page date}
+    \hfill\usebeamerfont{date}\insertdate
+  \end{beamercolorbox}
+  \vskip-\cam@inner@pitch % HACK: Not sure why we need this?
+}
+
+% Part page
+
+\defbeamertemplate*{part page}{cambridge theme}[1][]
+{
+  \start@fullpage{part page canvas}
+  \vskip2\cam@inner@pitch 
+  {\hfill\usebeamerfont{part page frame number}\usebeamercolor[fg]{part page frame number}\insertframenumber\par}
+  \vskip0pt plus 1filll
+  \color@bar[ht=\cam@inner@pitch]{part page separator upper}
+  \color@bar[ht=\cam@inner@pitch]{part page separator lower}
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,sep=0.5\cam@inner@pitch,leftskip=1.5\cam@inner@pitch,rightskip=1.5\cam@inner@pitch,#1]{part page title}
+    \hfill\hbox{%
+      {\usebeamerfont{part name}\partname~\insertromanpartnumber: }
+      {\usebeamerfont{part title}\insertpart\par}
+    }
+  \end{beamercolorbox}\nointerlineskip%
+  \vskip2\cam@inner@pitch 
+} 
+
+% (sub-)section in toc: default
+
+\defbeamertemplate*{section in toc}{cambridge theme}
+{\inserttocsection\par}
+
+\defbeamertemplate*{subsection in toc}{cambridge theme}
+{\leavevmode\leftskip=1.5em\inserttocsubsection\par}
+
+\defbeamertemplate*{subsubsection in toc}{cambridge theme}
+{\leavevmode\normalsize\usebeamerfont{subsection in toc}\leftskip=3em%
+  \usebeamerfont{subsubsection in toc}\inserttocsubsubsection\par}
+
+
+% (sub-)section in toc shaded, default
+
+\defbeamertemplate*{section in toc shaded}{cambridge theme}[1][20]
+{\begin{colormixin}{#1!parent.bg}\usebeamertemplate{section in toc}\end{colormixin}\unskip}
+
+\defbeamertemplate*{subsection in toc shaded}{cambridge theme}[1][20]
+{\begin{colormixin}{#1!parent.bg}\usebeamertemplate{subsection in toc}\end{colormixin}\unskip}
+
+\defbeamertemplate*{subsubsection in toc shaded}{cambridge theme}[1][20]
+{\begin{colormixin}{#1!parent.bg}\usebeamertemplate{subsubsection in toc}\end{colormixin}\unskip}
+
+% Itemize items, default
+
+\defbeamertemplate*{itemize item}{cambridge theme}{\scriptsize\raise1.25pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\defbeamertemplate*{itemize subitem}{cambridge theme}{\tiny\raise1.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\defbeamertemplate*{itemize subsubitem}{cambridge theme}{\tiny\raise1.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+
+
+% Enumerate items, default
+
+\defbeamertemplate*{enumerate item}{cambridge theme}{\insertenumlabel.}
+\defbeamertemplate*{enumerate subitem}{cambridge theme}{\insertenumlabel.\insertsubenumlabel}
+\defbeamertemplate*{enumerate subsubitem}{cambridge theme}{\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+\defbeamertemplate*{enumerate mini template}{cambridge theme}{\insertenumlabel}
+
+
+% Description item width
+
+\defbeamertemplate*{description item}{cambridge theme}{\insertdescriptionitem}
+
+% Itemize/Enumerate body
+
+\defbeamertemplate*{itemize/enumerate body begin}{cambridge theme}{}
+\defbeamertemplate*{itemize/enumerate body end}{cambridge theme}{}
+
+\defbeamertemplate*{itemize/enumerate subbody begin}{cambridge theme}{}
+\defbeamertemplate*{itemize/enumerate subbody end}{cambridge theme}{}
+
+\defbeamertemplate*{itemize/enumerate subsubbody begin}{cambridge theme}{}
+\defbeamertemplate*{itemize/enumerate subsubbody end}{cambridge theme}{}
+
+% Alerted text
+
+\defbeamertemplate*{alerted text begin}{cambridge theme}{\setbeamercolor{local structure}{parent=alerted text}}
+
+% Structured text
+
+% empyt defaults
+
+% Bibliography items
+
+\defbeamertemplate*{bibliography item}{cambridge theme}
+{\lower3.5pt\hbox{\hskip2pt\pgfuseimage{beamericonarticle}\hskip1pt}}
+
+\defbeamertemplate*{bibliography entry article}{cambridge theme}{}
+\defbeamertemplate*{bibliography entry title}{cambridge theme}{\par}
+\defbeamertemplate*{bibliography entry location}{cambridge theme}{\par}
+\defbeamertemplate*{bibliography entry note}{cambridge theme}{\par}
+
+% Abstract
+
+\defbeamertemplate*{abstract begin}{cambridge theme}{%
+  \start@fullpage{abstract page canvas}
+  \vskip4\cam@inner@pitch 
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,sep=0.5\cam@inner@pitch,leftskip=1.5\cam@inner@pitch]{abstract page title}
+    \vskip2.5\cam@inner@pitch 
+    {\usebeamerfont*{abstract title}\abstractname\par}
+  \end{beamercolorbox}\nointerlineskip%
+  \color@bar[ht=\cam@inner@pitch]{abstract page separator upper}
+  \color@bar[ht=\cam@inner@pitch]{abstract page separator lower}
+  \vskip2\cam@inner@pitch 
+  \vskip0pt plus 1filll
+  \begin{beamercolorbox}[wd=\oversized@paperwidth,sep=2\cam@inner@pitch]{abstract}%
+}
+
+\defbeamertemplate*{abstract title}{cambridge theme}%
+{}
+
+\defbeamertemplate*{abstract end}{cambridge theme}{%
+  \end{beamercolorbox}\nointerlineskip%
+  %\vskip2\cam@inner@pitch 
+  \vskip0pt plus 1filll
+  \vskip0pt plus 1filll
+  {\hfill\usebeamerfont{abstract page frame number}\usebeamercolor[fg]{abstract page frame number}\insertframenumber\par}
+  \vskip-\cam@inner@pitch %HACK: Why is this needed?
+}
+
+%{\beamercolorbox[vmode]{abstract}\leftskip2em\rightskip2em plus 1fill\usebeamerfont*{abstract}}
+
+%\defbeamertemplate*{abstract end}{cambridge theme}
+%{}
+%{\medskip\endbeamercolorbox}
+
+% Verse
+
+\defbeamertemplate*{verse begin}{cambridge theme}
+{\beamercolorbox[vmode]{verse}}
+
+\defbeamertemplate*{verse end}{cambridge theme}
+{\endbeamercolorbox}
+
+% Quotation
+
+\defbeamertemplate*{quotation begin}{cambridge theme}
+{\beamercolorbox[vmode]{quotation}}
+
+\defbeamertemplate*{quotation end}{cambridge theme}
+{\endbeamercolorbox}
+
+% Quote
+
+\defbeamertemplate*{quote begin}{cambridge theme}
+{\beamercolorbox[vmode]{quote}}
+
+\defbeamertemplate*{quote end}{cambridge theme}
+{\endbeamercolorbox}
+
+% Footnotes
+
+\defbeamertemplate*{footnote}{cambridge theme}
+{
+  \parindent 1em\noindent%
+  \raggedright
+  \hbox to 1.8em{\hfil\insertfootnotemark}\insertfootnotetext\par%
+}
+
+% Captions
+
+\defbeamertemplate*{caption}{cambridge theme}
+{%
+  \raggedright
+  {%
+    \usebeamercolor[fg]{caption name}%
+    \usebeamerfont*{caption name}%
+    \insertcaptionname:%
+  }
+  \insertcaption\par
+}
+
+% Blocks
+
+\defbeamertemplate*{block begin}{cambridge theme}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title}
+    \usebeamerfont*{block title}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title}
+  {}
+  {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body}%
+    \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\defbeamertemplate*{block end}{cambridge theme}  
+{\end{beamercolorbox}\vskip\smallskipamount}
+
+\defbeamertemplate*{block alerted begin}{cambridge theme}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title alerted}
+    \usebeamerfont*{block title alerted}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title alerted}
+  {}
+  {\ifbeamercolorempty[bg]{block body alerted}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body alerted}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body alerted}%
+    \ifbeamercolorempty[bg]{block body alerted}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+
+\defbeamertemplate*{block alerted end}{cambridge theme}
+{\end{beamercolorbox}\vskip\smallskipamount}
+
+
+\defbeamertemplate*{block example begin}{cambridge theme}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title example}
+    \usebeamerfont*{block title example}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title example}
+  {}
+  {\ifbeamercolorempty[bg]{block body example}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body example}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body example}%
+    \ifbeamercolorempty[bg]{block body example}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\defbeamertemplate*{block example end}{cambridge theme}
+{\end{beamercolorbox}\vskip\smallskipamount}
+
+% Theorems
+
+\defbeamertemplate*{theorem begin}{cambridge theme}
+{%
+  \begin{\inserttheoremblockenv}
+  {%
+    \inserttheoremname
+    \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi%
+  }%
+}
+
+\defbeamertemplate*{theorem end}{cambridge theme}
+{\end{\inserttheoremblockenv}}
+
+% Proofs
+\defbeamertemplate*{proof begin}{cambridge theme}
+{\begin{block}{\insertproofname}}
+
+\defbeamertemplate*{proof end}{cambridge theme}
+{\end{block}}
+
+\defbeamertemplate*{qed symbol}{cambridge theme}
+{\openbox}
+
+\mode<all>
+
+% Default title graphic is uni logo.
+\titlegraphic{\pgfuseimage{beamertitlelogocambridge}}
+
+% vim:sw=2:ts=2:et
