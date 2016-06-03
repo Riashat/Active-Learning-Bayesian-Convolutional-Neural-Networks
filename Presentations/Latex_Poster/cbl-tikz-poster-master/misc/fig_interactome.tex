@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+  \begin{scope}[xshift=0cm]
+    \node [mybox] (box){
+      \includegraphics[width=0.1\textwidth]{../misc/graph_standard.pdf}
+    };
+    \node[inner sep=0,text width=0.1\textwidth, text centered] (note1) at (0,-0.06\textwidth) {
+         A protein interactome};
+  \end{scope}
+  \begin{scope}[xshift=0.10\textwidth]
+    \node [mybox] (box){
+      \includegraphics[width=0.08\textwidth]{../misc/interactome_adjacency_mathematica.pdf}
+  };
+    \node[inner sep=0,text width=0.1\textwidth, text centered] (note1) at (0,-0.06\textwidth) {
+         Adjacency matrix sorted by MAP embedding};
+  \end{scope}  
+  \begin{scope}[xshift=0.20\textwidth]
+    \node [mybox] (box){
+      \includegraphics[width=0.1\textwidth]{../misc/graphon_listplot_bmp.pdf}
+  };
+    \node[inner sep=0,text width=0.1\textwidth, text centered] (note1) at (0,-0.06\textwidth) {
+         MAP $\Theta$};
+  \end{scope}
+\end{tikzpicture}

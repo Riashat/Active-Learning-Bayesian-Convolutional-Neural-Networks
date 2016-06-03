@@ -1,0 +1,594 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% From a template maintained at https://github.com/jamesrobertlloyd/cbl-tikz-poster
+%
+% Code near the top should be fairly standard and not need to be changed
+%  - except for the document class
+% Code lower down is more likely to be customised
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Document class
+%
+% Change this if you want a different size / orientation poster etc
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[landscape,a0b,final,a4resizeable]{a0poster}
+%\documentclass[portrait,a0b,final,a4resizeable]{a0poster}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% 'Basic' packages
+%
+% TODO - Almost certainly some are unnecessary - feel free to remove nonstandard
+% packages if you think it is a good idea not to always have them
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{multicol}
+\usepackage{color}
+\usepackage{shadow}
+\usepackage{morefloats}
+\usepackage{cite}
+\usepackage[pdftex]{graphicx}
+\usepackage{rotating}
+\usepackage{amsmath, amsthm, amssymb, bm}
+\usepackage{array}
+\usepackage{nth}
+\usepackage[square,numbers]{natbib}
+\usepackage{booktabs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% TIKZ packages and common definitions
+%
+% Add extra things as per your tikz needs
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{../common/picins}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows,chains,matrix,positioning,scopes,calc}
+\tikzstyle{mybox} = [draw=white, rectangle]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% myfig
+%
+% \myfig - replacement for \figure
+% necessary, since in multicol-environment 
+% \figure won't work        
+%                 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\myfig}[3][0]{
+\begin{center}
+  \vspace{1.5cm}
+  \includegraphics[width=#3\hsize,angle=#1]{#2}
+  \nobreak\medskip
+\end{center}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% mycaption                
+%
+% \mycaption - replacement for \caption
+% necessary, since in multicol-environment \figure and
+% therefore \caption won't work
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newcounter{figure}
+\setcounter{figure}{1}
+\newcommand{\mycaption}[1]{
+  \vspace{0.5cm}
+  \begin{quote}
+    {{\sc Figure} \arabic{figure}: #1}
+  \end{quote}
+  \vspace{1cm}
+  \stepcounter{figure}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Some standard colours
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{camlightblue}{rgb}{0.601 , 0.8, 1}
+\definecolor{camdarkblue}{rgb}{0, 0.203, 0.402}
+\definecolor{camred}{rgb}{1, 0.203, 0}
+\definecolor{camyellow}{rgb}{1, 0.8, 0}
+\definecolor{lightblue}{rgb}{0, 0, 0.80}
+\definecolor{white}{rgb}{1, 1, 1}
+\definecolor{whiteblue}{rgb}{0.80, 0.80, 1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Some look and feel definitions
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setlength{\columnsep}{0.03\textwidth}
+\setlength{\columnseprule}{0.0018\textwidth}
+\setlength{\parindent}{0.0cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \mysection - replacement for \section*
+% 
+% Puts a pretty box around some text
+% TODO - any other thoughts for what this box should look like
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tikzstyle{mysection} = [rectangle, 
+									draw=none, 
+									shade, 
+									outer color=camlightblue!30,
+									inner color=camlightblue!30,
+									text width=0.965\columnwidth,
+									text centered,
+									rounded corners=20pt,
+									minimum height=0.11\columnwidth]
+
+\newcommand{\mysection}[1]
+{
+\begin{center}
+  \begin{tikzpicture}
+    \node[mysection] {\sffamily\bfseries\LARGE#1};
+  \end{tikzpicture}
+\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Set the font
+%
+% TODO - Not sure what a canonical choice is - feel free to modify
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\familydefault}{cmss}
+\sffamily
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Poster environment
+%
+% Centres everything and can be used to define the width of the content
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{poster}{
+  \begin{center}
+  \begin{minipage}[c]{0.96\textwidth}
+}{
+  \end{minipage} 
+  \end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is probably a good place to put content specific packages and definitions
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{thm}{Theorem}%[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+
+\newtheorem*{theorem*}{Theorem}
+
+\theoremstyle{definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem{definition}[thm]{Definition}%[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+\newtheorem{rem}[thm]{Remark}
+
+\theoremstyle{remark}
+%\newtheorem{rem}{Remark}
+\newtheorem{note}{Note}
+\newtheorem{case}{Case}
+
+\newcommand{\eqd}{\overset{\,_{\!d}}{=}}
+\newcommand{\defn}[1]{\emph{#1}}
+
+\newcommand{\Law}{\mathcal{L}}
+
+\def\given{\,|\,}
+
+\def\SGinf{\mathbb{S}_{\infty}}
+
+\newcommand{\NonNegInts}{\mathbb{Z}_+}
+\newcommand{\Nats}{\mathbb{N}}
+\newcommand{\Rationals}{\mathbb{Q}}
+\newcommand{\Reals}{\mathbb{R}}
+
+\newcommand{\as}{\textrm{a.s.}}
+
+\def\[#1\]{\begin{align}#1\end{align}}
+\newcommand{\defas}{:=}
+
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\dist}{\ \sim\ }
+
+\newcommand{\kernel}{\kappa}
+\newcommand{\kernelmatrix}{K}
+\newcommand{\scalefactor}{s}
+\newcommand{\lengthscale}{\ell}
+\newcommand{\targets}{T}
+\newcommand{\noise}{\sigma_\targets}
+\newcommand{\pseudopoints}{\eta}
+\newcommand{\inputpoints}{\xi}
+\newcommand{\covhyppar}{\psi}
+\newcommand{\logistic}{\phi}
+
+\newcommand{\CompOrder}{\mathcal{O}}
+\def\graphspace{\mathbf{G}}
+\def\Uniform{\mbox{\rm Uniform}}
+\def\Bernoulli{\mbox{\rm Bernoulli}}
+\def\ie{i.e.,\ }
+\def\eg{e.g.,\ }
+\def\iid{i.i.d.\ }
+\def\simiid{\sim_{\mbox{\tiny iid}}}
+\def\simind{\sim_{\mbox{\tiny ind}}}
+\def\eqdist{\stackrel{\mbox{\tiny d}}{=}}
+\def\ahfunction{\theta}       
+\def\AHfunction{\Theta}           % A-H random function
+\def\AHvar{U}                     % A-H uniform variables
+\def\AHvaralt{V}                  % A-H uniform variables - for bipartite data
+\def\larray{W}                    % latent array sampled with A-H
+%\def\latentspace{\mathbf{W}}      % range of entries
+\def\latentspace{\mathcal{W}}      % range of entries
+\def\darray{X}                    % data array
+%\def\dataspace{\mathbf{X}}        % sample space
+\def\dataspace{\mathcal{X}}        % sample space
+\def\cfspace{\mathbf{C}}          % space of continuous functions
+%\def\GP{\mbox{\mathcal{GP}}}
+\def\GP{\mathcal{GP}}
+\def\likelihood{P}
+\def\CovData{C}
+\def\CovDataAlt{D}
+
+\def\newarrow{\mbox{\begin{tikzpicture}
+             \useasboundingbox{(-3pt,-4.5pt) rectangle (19pt,1pt)};
+             \draw[->] (0,-0.07)--(17pt,-0.07);\end{tikzpicture}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% The document environment starts here
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Begin the poster environment - centres things and potentially changes the width
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{poster}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Potentially add some space at the top of the poster
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vspace{0\baselineskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Draw the header as a TIKZ picture
+%
+% Using TIKZ to allow for easy alignment
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+\begin{tikzpicture}[x=0.5\textwidth]
+    % Dummy nodes at edges for spacing
+    % TODO - a better way?
+    \node at (+1, 0) {};    
+    \node at (-1, 0) {};
+    % Set the size of the badges
+    \def \badgeheight {0.08\textwidth}
+    % Title text
+    \node[inner sep=0,text width=0.5\textwidth,text centered,font=\Huge] (Title) at (0,0) 
+    {
+      {\sffamily \Huge \textbf{Random function priors for exchangeable arrays with\\applications to graphs and relational data}}\\
+      {\huge\sffamily James Robert Lloyd\textsuperscript{1}, Peter Orbanz\textsuperscript{2}, Zoubin Ghahramani\textsuperscript{1}, Daniel M. Roy\textsuperscript{1}}\\
+      \vspace{-0.3\baselineskip}
+      {\large\sffamily 1: Department of Engineering, University of Cambridge, UK 2: Department of Statistics, Columbia University, USA}
+    };
+    % Cambridge badge
+    \node [mybox] (Cambridge Badge) at (-0.9, 0) {
+        \includegraphics[height=\badgeheight]{../badges/cam-crest-and-text.pdf}
+    };
+    % CBL badge
+    \node [mybox] (CBL Badge) at (-0.7, 0) {
+        \includegraphics[height=\badgeheight]{../badges/cbl-badge-cropped.png}
+    };
+    % Columbia logo
+    \node [mybox] (box) at (0.75, 0) {
+        \includegraphics[width=0.2\textwidth]{../badges/columbia.pdf}
+    };
+\end{tikzpicture}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Spacing between title and main body
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vspace{1\baselineskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Columns environment
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{multicols}{3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Start of content
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\large
+
+\mysection{Structured relational data typically encoded in the form of arrays\ldots}
+
+\vspace{2\baselineskip}
+
+\begin{center}
+\input{../misc/interactome_adj.tex}
+\end{center}
+
+\vspace{2\baselineskip}
+
+\mysection{\ldots which are often invariant to permutations of rows and columns i.e.\ they are exchangeable}
+
+\vspace{3\baselineskip}
+
+\begin{center}
+\input{../misc/exchangeable.tex}
+\end{center}
+
+\vspace{1\baselineskip}
+
+\begin{center}
+{\Large When the labelling of nodes is arbitrary, the two adjacency matrices should be treated equivalently.}
+\end{center}
+
+\vspace{\baselineskip}
+
+\newpage
+
+\mysection{Probability distributions for\\exchangeable arrays can be characterised\ldots}
+
+\vspace{1\baselineskip}
+
+\begin{definition*}
+  An array $\darray=(\darray_{ij})_{i,j\in\Nats}$ is called an \emph{exchangeable array} if 
+  \begin{equation*}
+    \label{eq:jointly:ex}
+    (\darray_{ij})\eqdist(\darray_{\pi(i)\pi(j)}) \qquad\text{ for every }\pi\in\SGinf\;.
+  \end{equation*}
+\end{definition*}
+
+\vspace{1\baselineskip}
+
+\begin{theorem*}[Aldous, Hoover]
+  \label{theorem:ah}
+  A random 2-array $(\darray_{ij})$ is exchangeable if and only if there is a random (measurable) function ${F:[0,1]^3\rightarrow\dataspace}$ such that 
+  \begin{equation*}
+    \label{eq:ah}
+    (\darray_{ij})\eqdist (F(\AHvar_i,\AHvar_j,\AHvar_{ij})).
+  \end{equation*}
+for every collection  $(\AHvar_i)_{i\in\Nats}$ and $(\AHvar_{ij})_{i\le j\in\Nats}$ of \iid $\Uniform[0,1]$ random variables, where $\AHvar_{ji} = \AHvar_{ij}$ for $j < i \in \Nats$.
+\end{theorem*}
+
+\vspace{0\baselineskip}
+
+%\textbf{This can be extendeded to $d$-arrays: $F$ is replaced by}
+
+%\begin{equation}
+%\label{eq:ah_d-dim}
+%  F:[0,1]^{2^d-1}\longrightarrow\dataspace\qquad\text{and}\qquad (\darray_{i_1,\dots,i_d})\eqd (F(\AHvar_{I_1},\dots,\AHvar_{I_{(2^d-1)}}))\;.
+%\end{equation}
+
+%\vspace{0\baselineskip}
+
+%where $I_1, I_2, \ldots$ are the non-empty subsets of $\lbrace 1,\ldots,d\rbrace$.
+
+%\vspace{0\baselineskip}
+
+%\textbf{Another extension by Kallenberg shows that an arbitrarily good approximation to any exchangeable array can be made with $F$ of the form}
+
+%\begin{equation}
+%\label{eq:ah_d-dim}
+%  F:[0,1]^{d}\longrightarrow\dataspace\qquad\text{and}\qquad (\darray_{i_1,\dots,i_d})\eqd (F(\AHvar_1,\dots,\AHvar_d))\;.
+%\end{equation}
+
+\mysection{\ldots inspiring a simple Bayesian nonparametric model}
+
+\vspace{1\baselineskip}
+
+We decompose the function $F$ into two functions 
+${\AHfunction:[0,1]^2\rightarrow\latentspace}$ 
+and ${H:[0,1]\times\latentspace\rightarrow\dataspace}$ for a suitable space $\latentspace$\/, such that
+\begin{equation*}
+  \label{eq:decomposition}
+  (\darray_{ij}) \eqd (F(\AHvar_i,\AHvar_j,\AHvar_{ij}))=(H(\AHvar_{ij},\AHfunction(\AHvar_i,\AHvar_j)))\;.
+\end{equation*}
+
+\vspace{1\baselineskip}
+
+%The decomposition introduces a natural hierarchical structure
+%\begin{itemize}
+%\item $\AHfunction$ captures the structure of the underlying array
+%\item $(\AHvar_i)$ represent attributes of nodes or objects
+%\item $H$ and the array $(U_{ij})$ model the remaining noise
+%\end{itemize}
+
+Inspiring the following generative model
+
+\begin{equation}
+  \begin{split}
+    \AHfunction\; &\sim\; \GP(0,\kernel) \\
+    \AHvar_{1},\AHvar_{2},\ldots\; &\simiid\; \Uniform[0,1] \nonumber \\
+    \darray_{ij}\,|W_{ij}\; &\sim\; \likelihood[\,.\,|W_{ij}]
+  \end{split}
+\end{equation}
+
+\begin{center}
+where $W_{ij}=\AHfunction(\AHvar_i,\AHvar_j)$.
+\end{center}
+
+%\vspace{\baselineskip}
+
+%\begin{rem}
+%The uniform distributions can be replaced with any non-atomic probability measure on a Borel space.
+%For the purposes of inference, normal distributions are more convenient.
+%\end{rem}
+
+\vspace{1\baselineskip}
+
+Example: Sampling a symmetric binary $2$-array i.e.\ an undirected graph:
+
+\begin{center}
+  \input{../misc/fig_graphon_wide.tex}
+\end{center}
+
+\mysection{Inference: MCMC version of Gaussian process approximation}
+
+\vspace{0\baselineskip}
+
+{\Large
+
+\begin{itemize}
+\item Inducing points in subset of regressors appoximation treated as random variables (locations and values)
+\item Gaussian process sampled using elliptical slice sampling; all other parameters sampled using slice sampling
+\end{itemize}
+
+}
+
+%\mysection{Inference: random inducing points}
+%
+%\newcommand{\numobs}{\mathrm O}
+%\newcommand{\numnodes}{\mathrm N}
+%
+%For tractability, we apply a variation of a method known as Subsets-of-Regressors (SoR).
+%The SoR approximation replaces the infinite dimensional GP with a finite dimensional approximation.
+%Our approach is to treat both the inputs and outputs of the GP as latent variables.
+%
+%In particular, we introduce $k$ Gaussian distributed pseudoinputs $\pseudopoints=(\pseudopoints_1,\dotsc,\pseudopoints_k)$
+%and define target values ${\targets_j = \AHfunction(\pseudopoints_j)}$.
+%Writing $K_{\pseudopoints\pseudopoints}$ for the kernel matrix formed from the pseudoinputs $\pseudopoints$, we have
+%\[
+%(\pseudopoints_i) \simiid \Normal(0,I_{2r}) \qquad\text{and}\qquad
+%\targets \given \pseudopoints \dist \Normal(0,K_{\pseudopoints\pseudopoints}).
+%\]
+%The idea of the SoR approximation is to replace $\larray_{ij}$ with the posterior mean conditioned on $(\pseudopoints,\targets)$,
+%\[
+%\larray = K_{\inputpoints\pseudopoints} K_{\pseudopoints\pseudopoints}^{-1}\targets,
+%\label{eqn:GPConditional}
+%\]
+%where $K_{\inputpoints\pseudopoints}$ is the kernel matrix between the latent embeddings $\inputpoints$ and the pseudoinputs $\pseudopoints$.  By considering random pseudoinputs, we construct an MCMC analogue of other methods in the literature.
+%
+%Inference then performed using slice sampling and elliptical slice sampling.
+
+\newpage
+
+\mysection{Latent variables are interpretable}
+
+\vspace{0.5\baselineskip}
+
+\begin{center}
+  \input{../misc/fig_interactome.tex}
+\end{center}
+
+\vspace{\baselineskip}
+
+Sorting the adjacency matrix of the protein interactome using the (approximate) MAP values of the $\AHvar_i$ reveals interpretable structure in the data.
+The higher density of edges along the diagonal reveals homophily.
+The block structure in the top left reveals stochastic equivalence.
+These features can also be seen in the MAP $\Theta$.
+
+\vspace{0.5\baselineskip}
+
+\mysection{Representation allows for common perspective on a variety of models}
+
+\vspace{\baselineskip}
+
+\begin{center}
+  \begin{tabular}{lccl} 
+%    \toprule
+    \multicolumn{4}{c}{Graph data}\\
+    \midrule
+    %\addlinespace[2pt]
+    %\textcolor{red}{Random function model} 
+    Random function model & $\AHfunction$ & $\sim$ & $\GP\,(0, \kernel)$\\
+    Latent class & $\larray_{ij}$ & $=$ & $\Lambda_{\AHvar_i\AHvar_j}\,\textrm{where} \,\AHvar_i \in \{1,\ldots,K\}$\\
+    IRM & $\larray_{ij}$ & $=$ & $\Lambda_{\AHvar_i\AHvar_j}\,\textrm{where} \,\AHvar_i \in \{1,\ldots,\infty\}$\\
+    Latent distance & $\larray_{ij}$ & $=$ & $-|\AHvar_i - \AHvar_j|$\\
+    Eigenmodel &$\larray_{ij}$ & $=$ & $\AHvar_i'\Lambda \AHvar_j$\\
+    LFRM & $\larray_{ij}$ & $=$ & $\AHvar_i'\Lambda \AHvar_j\,\textrm{where} \,\AHvar_i \in \{0,1\}^\infty$\\
+    ILA & $\larray_{ij}$ & $=$ & $\sum_d \mathbb{I}_{U_{id}}\mathbb{I}_{U_{jd}}\Lambda^{(d)}_{U_{id}U_{jd}}\,\textrm{where} \,\AHvar_i \in \{0,\ldots,\infty\}^\infty$\\
+    SMGB & $\AHfunction$ & $\dist$ & $\GP\,(0, \kernel_1 \otimes \kernel_2)$ \\
+    %\midrule
+    \addlinespace[4pt]
+    \multicolumn{4}{c}{Real-valued array data}\\
+    \midrule
+    %\textcolor{red}{Random function model} 
+    Random function model & $\AHfunction$ & $\sim$ & $\GP\,(0, \kernel)$\\
+    Mondrian process based & $\AHfunction$ & = & piece-wise constant random function\\
+    PMF & $\larray_{ij}$ & $=$ & $\AHvar_i'V_j$\\
+    GPLVM & $\AHfunction$ & $\sim$ & $\GP\,(0, \kernel \otimes \delta)$\\
+    %Linear relational GP~\cite{Yu2008} & $\AHfunction$ & $\sim$ & $\GP\,(0, \kernel_1 \otimes \kernel_2)\,\textrm{where} \,\kernel_i\,\textrm{is linear} $\\
+%\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{\baselineskip}
+
+\mysection{Flexibility of nonparametric model\\warranted by empirical prediction study}
+
+\vspace{\baselineskip}
+
+\begin{center}
+  \begin{tabular}{r | r r r | r r r | r r r}
+    \multicolumn{10}{c}{AUC results} \\
+    \addlinespace[2pt]
+    Data set & \multicolumn{3}{c|}{High school} & \multicolumn{3}{c|}{NIPS} & \multicolumn{3}{c}{Protein} \\
+    Latent dim. & 1 & 2 & 3 & 1 & 2 & 3 & 1 & 2 & 3 \\
+    \midrule
+    PMF                   & 0.747 & 0.792 & 0.792 & 0.729 & 0.789 & 0.820 & 0.787 & 0.810 & 0.841 \\
+    Eigenmodel            & 0.742 & 0.806 & 0.806 & 0.789 & 0.818 & 0.845 & 0.805 & 0.866 & 0.882 \\
+    GPLVM                 & 0.744 & 0.775 & 0.782 & 0.888 & 0.876 & 0.883 & 0.877 & 0.883 & 0.873 \\
+    RFM & \textbf{0.815} & \textbf{0.827} & \textbf{0.820} & \textbf{0.907} & \textbf{0.914} & \textbf{0.919} & \textbf{0.903} & \textbf{0.910} & \textbf{0.912}
+  \end{tabular}
+\end{center}
+
+%\small{
+%\bibliographystyle{unsrt}
+%\bibliographystyle{../misc/natbib}
+%\bibliography{../misc/library,../misc/biblio,../misc/bibdesk-porbanz}
+%}
+
+\end{multicols}
+
+\end{poster}
+
+\end{document}
