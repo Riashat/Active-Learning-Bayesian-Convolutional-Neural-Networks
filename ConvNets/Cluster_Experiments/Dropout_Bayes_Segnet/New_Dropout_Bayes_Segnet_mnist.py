@@ -150,7 +150,7 @@ for e in range(Experiments):
 	Pool_Train_Loss = np.zeros(shape=(nb_epoch, 1)) 
 	Pool_Valid_Acc = np.zeros(shape=(nb_epoch, 1)) 	
 	Pool_Train_Acc = np.zeros(shape=(nb_epoch, 1)) 
-	x_pool_All = np.zeros(shape=(1))
+	row_All = np.zeros(shape=(1))
 
 	Y_train = np_utils.to_categorical(y_train, nb_classes)
 
@@ -242,6 +242,8 @@ for e in range(Experiments):
 		a_1d = BayesSegnet_Sigma.flatten()
 		row = a_1d.argsort()[-Queries:][::-1]
 
+		row_All = np.append(row_All, row)
+
 			#saving pooled images
 		# for im in range(row[0:2].shape[0]):
 		# 	Image = X_Pool[row[im], :, :, :]
@@ -324,7 +326,7 @@ for e in range(Experiments):
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+ 'Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+'Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+ 'Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
-	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+'Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+'Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', row_All)
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bayes_Segnet/Results/'+ 'Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
 
 print('Saving Average Accuracy Over Experiments')

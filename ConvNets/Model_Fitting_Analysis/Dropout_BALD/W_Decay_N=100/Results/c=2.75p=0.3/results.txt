@@ -1,0 +1,1 @@
+max_accuracy = 0.9042 - similar to the other ones

@@ -1,0 +1,7 @@
+c = 1 in weight decay
+
+dropout pool points = 1000
+
+Acquisition Iterations = 190
+
+Queries at each iter = 5

@@ -36,10 +36,10 @@ nb_conv = 3
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 95
+acquisition_iterations = 10
 
 #use a large number of dropout iterations
-Queries = 10
+Queries = 100
 
 
 Experiments_All_Accuracy = np.zeros(shape=(acquisition_iterations+1))
@@ -224,9 +224,8 @@ for e in range(Experiments):
 		Class_Log_Probability = np.log2(Class_Probability)
 		Entropy_Each_Cell = - np.multiply(Class_Probability, Class_Log_Probability)
 
-		Entropy = np.sum(Entropy_Each_Cell, axis=1)	# summing across rows of the array
+		Entropy = np.sum(Entropy_Each_Cell, axis=1)	# summing across columns of the array
 
-		#x_pool_index = 	np.unravel_index(Entropy.argmax(), Entropy.shape)	#for finding the maximum value np.amax(Entropy)
 		x_pool_index = Entropy.argsort()[-Queries:][::-1]
 
 		# THIS FINDS THE INDEX OF THE MINIMUM

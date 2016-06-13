@@ -1,0 +1,9 @@
+Queries = 5
+
+Acquisition Iterations = 16
+
+N = 100
+
+Epochs = 50
+
+c in weight decay = 0.02

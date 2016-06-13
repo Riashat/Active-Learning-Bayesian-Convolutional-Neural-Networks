@@ -1,0 +1,7 @@
+N = 100
+
+Acquisition Iterations = 50
+
+c in weight decay = 1 (too large for this small dataset)
+
+Epochs = 50

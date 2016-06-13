@@ -36,6 +36,7 @@ nb_conv = 3
 score=0
 all_accuracy = 0
 acquisition_iterations = 95
+accuracy = 0
 
 #use a large number of dropout iterations
 dropout_iterations = 100
@@ -299,7 +300,7 @@ for e in range(Experiments):
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+'Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+ 'Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
 	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+'Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
-	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+ 'Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', accuracy)
+	np.save('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Random_Acquisition/Results/'+ 'Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
 
 print('Saving Average Accuracy Over Experiments')
 
