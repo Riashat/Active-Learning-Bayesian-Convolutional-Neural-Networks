@@ -1,0 +1,24 @@
+Starting with 100 labelled samples
+
+Experiments = 2
+
+Acquisition Iterations = 900
+
+
+Validation with 2000 data points
+
+Number of Epochs = 50
+
+Pool Subset for Dropout = 1000
+
+Weight Decay starting value c = 10
+
+
+Dropout Probability = 0.25
+
+Dropout Iterations = 100
+
+Results as: Averaged_Main_Bald_Q5_N1000_
+
+
+
