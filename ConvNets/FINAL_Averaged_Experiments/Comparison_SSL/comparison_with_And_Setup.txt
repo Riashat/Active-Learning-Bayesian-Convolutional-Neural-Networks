@@ -1,0 +1,28 @@
+#compare our results with:
+
+1. Semi-Supervised Learning with Ladder Networks
+
+2. Semi-Supervised Learning with Generative Adversarial Networks
+
+3. VAE with Semi-Supervised Learning (Max Welling)
+
+
+
+*** See the recent papers from Data-Efficient Machine Learning workshop - ICML 2016
+
+
+
+
+#Experimental Setup
+
+- Want to compare for N=100 for Q=1
+
+- N=1000 for Q=5 
+
+- Using the weighted_inputs in loss function to avoid overfitting for small data - in case of N=100
+
+
+# SSL with Generative Adversarial Networks
+
+
+
