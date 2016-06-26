@@ -18,13 +18,13 @@ import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
 
 
-Experiments = 1
+Experiments = 2
 
 batch_size = 128
 nb_classes = 10
 
 #use a large number of epochs
-nb_epoch = 30
+nb_epoch = 50
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -37,10 +37,10 @@ nb_conv = 3
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 20
+acquisition_iterations = 90
 
 #use a large number of dropout iterations
-dropout_iterations = 20
+dropout_iterations = 100
 
 Queries = 10
 

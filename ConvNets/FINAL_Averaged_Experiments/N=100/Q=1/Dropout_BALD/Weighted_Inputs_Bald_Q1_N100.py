@@ -1,3 +1,5 @@
+#weighted inputs in the loss function
+
 from __future__ import print_function
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
@@ -14,7 +16,7 @@ import random
 import scipy.io
 import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
-from scipy.stats import mode
+
 
 Experiments = 3
 
@@ -39,10 +41,13 @@ acquisition_iterations = 80
 
 #use a large number of dropout iterations
 dropout_iterations = 100
+
 Queries = 1
 
 
 Experiments_All_Accuracy = np.zeros(shape=(acquisition_iterations+1))
+
+
 
 
 
@@ -61,14 +66,14 @@ for e in range(Experiments):
 	X_train_All = X_train_All.reshape(X_train_All.shape[0], 1, img_rows, img_cols)
 	X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 
-
 	random_split = np.asarray(random.sample(range(0,X_train_All.shape[0]), X_train_All.shape[0]))
 
 	X_train_All = X_train_All[random_split, :, :, :]
 	y_train_All = y_train_All[random_split]
 
-	X_valid = X_train_All[10000:12000, :, :, :]
-	y_valid = y_train_All[10000:12000]
+
+	X_valid = X_train_All[10000:11000, :, :, :]
+	y_valid = y_train_All[10000:11000]
 
 	X_Pool = X_train_All[20000:60000, :, :, :]
 	y_Pool = y_train_All[20000:60000]
@@ -79,57 +84,59 @@ for e in range(Experiments):
 
 	#training data to have equal distribution of classes
 	idx_0 = np.array( np.where(y_train_All==0)  ).T
-	idx_0 = idx_0[0:10,0]
+	idx_0 = idx_0[0:2,0]
 	X_0 = X_train_All[idx_0, :, :, :]
 	y_0 = y_train_All[idx_0]
 
 	idx_1 = np.array( np.where(y_train_All==1)  ).T
-	idx_1 = idx_1[0:10,0]
+	idx_1 = idx_1[0:2,0]
 	X_1 = X_train_All[idx_1, :, :, :]
 	y_1 = y_train_All[idx_1]
 
 	idx_2 = np.array( np.where(y_train_All==2)  ).T
-	idx_2 = idx_2[0:10,0]
+	idx_2 = idx_2[0:2,0]
 	X_2 = X_train_All[idx_2, :, :, :]
 	y_2 = y_train_All[idx_2]
 
 	idx_3 = np.array( np.where(y_train_All==3)  ).T
-	idx_3 = idx_3[0:10,0]
+	idx_3 = idx_3[0:2,0]
 	X_3 = X_train_All[idx_3, :, :, :]
 	y_3 = y_train_All[idx_3]
 
 	idx_4 = np.array( np.where(y_train_All==4)  ).T
-	idx_4 = idx_4[0:10,0]
+	idx_4 = idx_4[0:2,0]
 	X_4 = X_train_All[idx_4, :, :, :]
 	y_4 = y_train_All[idx_4]
 
 	idx_5 = np.array( np.where(y_train_All==5)  ).T
-	idx_5 = idx_5[0:10,0]
+	idx_5 = idx_5[0:2,0]
 	X_5 = X_train_All[idx_5, :, :, :]
 	y_5 = y_train_All[idx_5]
 
 	idx_6 = np.array( np.where(y_train_All==6)  ).T
-	idx_6 = idx_6[0:10,0]
+	idx_6 = idx_6[0:2,0]
 	X_6 = X_train_All[idx_6, :, :, :]
 	y_6 = y_train_All[idx_6]
 
 	idx_7 = np.array( np.where(y_train_All==7)  ).T
-	idx_7 = idx_7[0:10,0]
+	idx_7 = idx_7[0:2,0]
 	X_7 = X_train_All[idx_7, :, :, :]
 	y_7 = y_train_All[idx_7]
 
 	idx_8 = np.array( np.where(y_train_All==8)  ).T
-	idx_8 = idx_8[0:10,0]
+	idx_8 = idx_8[0:2,0]
 	X_8 = X_train_All[idx_8, :, :, :]
 	y_8 = y_train_All[idx_8]
 
 	idx_9 = np.array( np.where(y_train_All==9)  ).T
-	idx_9 = idx_9[0:10,0]
+	idx_9 = idx_9[0:2,0]
 	X_9 = X_train_All[idx_9, :, :, :]
 	y_9 = y_train_All[idx_9]
 
 	X_train = np.concatenate((X_0, X_1, X_2, X_3, X_4, X_5, X_6, X_7, X_8, X_9), axis=0 )
 	y_train = np.concatenate((y_0, y_1, y_2, y_3, y_4, y_5, y_6, y_7, y_8, y_9), axis=0 )
+
+
 
 
 	print('X_train shape:', X_train.shape)
@@ -162,7 +169,6 @@ for e in range(Experiments):
 	Y_train = np_utils.to_categorical(y_train, nb_classes)
 
 	print('Training Model Without Acquisitions in Experiment', e)
-
 
 
 	model = Sequential()
@@ -209,7 +215,6 @@ for e in range(Experiments):
 	Pool_Valid_Acc = Valid_Acc
 
 
-
 	print('Evaluating Test Accuracy Without Acquisition')
 	score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
 
@@ -220,50 +225,71 @@ for e in range(Experiments):
 	sample_weight_constant = np.ones(len(X_train))
 
 
-
+	
 	for i in range(acquisition_iterations):
+		
 		print('POOLING ITERATION', i)
 
 		gamma_k.fill(gamma_value)
 
-		pool_subset = 1000
+		print('Use trained model for test time dropout')
+
+		#take subset of Pool Points for Test Time Dropout 
+		#and do acquisition from there
+		pool_subset = 2000
 		pool_subset_dropout = np.asarray(random.sample(range(0,X_Pool.shape[0]), pool_subset))
 		X_Pool_Dropout = X_Pool[pool_subset_dropout, :, :, :]
 		y_Pool_Dropout = y_Pool[pool_subset_dropout]
 
-		All_Dropout_Classes = np.zeros(shape=(X_Pool_Dropout.shape[0],1))
-		print('Use trained model for test time dropout')
+		score_All = np.zeros(shape=(X_Pool_Dropout.shape[0], nb_classes))
+		All_Entropy_Dropout = np.zeros(shape=X_Pool_Dropout.shape[0])
 
 		for d in range(dropout_iterations):
 			print ('Dropout Iteration', d)
-			dropout_classes = model.predict_classes_stochastic(X_Pool_Dropout,batch_size=batch_size, verbose=1)
-			dropout_classes = np.array([dropout_classes]).T
-			#np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/BCNN_Maximal_Uncertainty/Variation_Ratio/Dropout_Scores/'+'Dropout_Score_'+str(d)+'.npy',dropout_classes)
-			All_Dropout_Classes = np.append(All_Dropout_Classes, dropout_classes, axis=1)
+			dropout_score = model.predict_stochastic(X_Pool_Dropout,batch_size=batch_size, verbose=1)
+			# np.save('/Users/Riashat/Documents/Cambridge_THESIS/Code/Experiments/keras/active_learning/Acquisition_Functions/Bayesian_Active_Learning/GPU/BALD/Dropout_Scores/'+ 'Experiment_' + str(e)  + '_Dropout_Score_'+str(d)+'.npy',dropout_score)
+			#computing G_X
+			score_All = score_All + dropout_score
 
-		Variation = np.zeros(shape=(X_Pool_Dropout.shape[0]))
+			#computing F_X
+			dropout_score_log = np.log2(dropout_score)
+			Entropy_Compute = - np.multiply(dropout_score, dropout_score_log)
+			Entropy_Per_Dropout = np.sum(Entropy_Compute, axis=1)
 
-		for t in range(X_Pool_Dropout.shape[0]):
-			L = np.array([0])
-			for d_iter in range(dropout_iterations):
-				L = np.append(L, All_Dropout_Classes[t, d_iter+1])						
-			Predicted_Class, Mode = mode(L[1:])
-			v = np.array(  [1 - Mode/float(dropout_iterations)])
-			Variation[t] = v
+			All_Entropy_Dropout = All_Entropy_Dropout + Entropy_Per_Dropout 
 
 
-		a_1d = Variation.flatten()
+		Avg_Pi = np.divide(score_All, dropout_iterations)
+		Log_Avg_Pi = np.log2(Avg_Pi)
+		Entropy_Avg_Pi = - np.multiply(Avg_Pi, Log_Avg_Pi)
+		Entropy_Average_Pi = np.sum(Entropy_Avg_Pi, axis=1)
+
+		G_X = Entropy_Average_Pi
+
+		Average_Entropy = np.divide(All_Entropy_Dropout, dropout_iterations)
+
+		F_X = Average_Entropy
+
+		U_X = G_X - F_X
+
+		# THIS FINDS THE MINIMUM INDEX 
+		# a_1d = U_X.flatten()
+		# x_pool_index = a_1d.argsort()[-Queries:]
+
+		a_1d = U_X.flatten()
 		x_pool_index = a_1d.argsort()[-Queries:][::-1]
+
 
 		#store all the pooled images indexes
 		x_pool_All = np.append(x_pool_All, x_pool_index)
 
 		#saving pooled images
-		# for im in range(4):
+
+		# #save only 3 images per iteration
+		# for im in range(x_pool_index[0:2].shape[0]):
 		# 	Image = X_Pool[x_pool_index[im], :, :, :]
 		# 	img = Image.reshape((28,28))
-		# 	sp.misc.imsave(''+'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
-
+			#sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bald/Pooled_Images/' + 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 		Pooled_X = X_Pool_Dropout[x_pool_index, 0:3,0:32,0:32]
 		Pooled_Y = y_Pool_Dropout[x_pool_index]	
@@ -287,13 +313,8 @@ for e in range(Experiments):
 		y_train = np.concatenate((y_train, Pooled_Y), axis=0)
 
 
-
-		print('Train Model with pooled points')
-
-
 		# convert class vectors to binary class matrices
 		Y_train = np_utils.to_categorical(y_train, nb_classes)
-
 
 		model = Sequential()
 		model.add(Convolution2D(nb_filters, nb_conv, nb_conv, border_mode='valid', input_shape=(1, img_rows, img_cols)))
@@ -313,11 +334,11 @@ for e in range(Experiments):
 		model.add(Dense(nb_classes))
 		model.add(Activation('softmax'))
 
-
 		model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-
 		print('Using sample weights here - weighted inputs in the loss function')
+
+
 
 		#add a gamma at every acquisition iteration
 		print('Gamma Concatenation')
@@ -345,7 +366,6 @@ for e in range(Experiments):
 		Pool_Valid_Acc = np.append(Pool_Valid_Acc, Valid_Acc, axis=1)
 		Pool_Train_Acc = np.append(Pool_Train_Acc, Train_Acc, axis=1)	
 
-
 		print('Evaluate Model Test Accuracy with pooled points')
 
 		score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
@@ -353,42 +373,27 @@ for e in range(Experiments):
 		print('Test accuracy:', acc)
 		all_accuracy = np.append(all_accuracy, acc)
 
-
 		print('Use this trained model with pooled points for Dropout again')
 
 
 	print('Storing Accuracy Values over experiments')
 	Experiments_All_Accuracy = Experiments_All_Accuracy + all_accuracy
 
-
 	print('Saving Results Per Experiment')
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+'Averaged_Main_VarRatio_Q1_N100_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+ 'Averaged_Main_VarRatio_Q1_N100_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+'Averaged_Main_VarRatio_Q1_N100_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+ 'Averaged_Main_VarRatio_Q1_N100_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+'Averaged_Main_VarRatio_Q1_N100_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+ 'Averaged_Main_VarRatio_Q1_N100_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
+
+
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q1_N100_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Averaged_Main_Bald_Q1_N100_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q1_N100_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Averaged_Main_Bald_Q1_N100_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q1_N100_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Averaged_Main_Bald_Q1_N100_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
 
 print('Saving Average Accuracy Over Experiments')
 
 Average_Accuracy = np.divide(Experiments_All_Accuracy, Experiments)
 
-np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/SSL_Comparison/Results/'+'Averaged_Main_VarRatio_Q1_N1000_Average_Accuracy'+'.npy', Average_Accuracy)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q1_N100_Average_Accuracy'+'.npy', Average_Accuracy)
 
 
 

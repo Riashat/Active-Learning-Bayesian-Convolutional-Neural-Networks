@@ -364,8 +364,7 @@ for e in range(Experiments):
 	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Uncertainty_Calibrations/Softmax_Bald/Results/'+ 'Averaged_Main_Bald_Q10_N1000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
 	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Uncertainty_Calibrations/Softmax_Bald/Results/'+'Averaged_Main_Bald_Q10_N1000_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
 	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Uncertainty_Calibrations/Softmax_Bald/Results/'+ 'Averaged_Main_Bald_Q10_N1000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
-	# np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Uncertainty_Calibrations/Softmax_Bald/Results/'+ 'GoogLeNet_Averaged_Main_Bald_Q10_N1000_rmse_Results_'+ 'Experiment_' + str(e) + '.npy', all_rmse)
-	# np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Uncertainty_Calibrations/Softmax_Bald/Results/'+ 'GoogLeNet_Averaged_Main_Bald_Q10_N1000_logLikelihood_Results_'+ 'Experiment_' + str(e) + '.npy', all_predicted_log_likelihood)
+
 
 print('Saving Average Accuracy Over Experiments')
 

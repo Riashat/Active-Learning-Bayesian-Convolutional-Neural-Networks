@@ -14,12 +14,12 @@ import random
 import scipy.io
 import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
-from sklearn.metrics import log_loss
-from sklearn.metrics import mean_squared_error
-from math import sqrt
+# from sklearn.metrics import log_loss
+# from sklearn.metrics import mean_squared_error
+# from math import sqrt
 
 
-Experiments = 3
+Experiments = 2
 
 batch_size = 128
 nb_classes = 10
@@ -207,13 +207,13 @@ for e in range(Experiments):
 
 	print('Evaluating Test Accuracy Without Acquisition')
 	score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
-	Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
-	predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
-	rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
+	# Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
+	# predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
+	# rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
 
-	all_predicted_log_likelihood = predicted_log_likelihood
-	all_accuracy = acc
-	all_rmse = rmse
+	# all_predicted_log_likelihood = predicted_log_likelihood
+	# all_accuracy = acc
+	# all_rmse = rmse
 
 	all_accuracy = acc
 
@@ -354,9 +354,9 @@ for e in range(Experiments):
 		print('Test score:', score)
 		print('Test accuracy:', acc)
 		all_accuracy = np.append(all_accuracy, acc)
-		Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
-		predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
-		rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
+		# Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
+		# predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
+		# rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
 
 		print('Use this trained model with pooled points for Dropout again')
 
@@ -366,20 +366,20 @@ for e in range(Experiments):
 
 
 	print('Saving Results Per Experiment')
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_rmse_Results_'+ 'Experiment_' + str(e) + '.npy', all_rmse)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_logLikelihood_Results_'+ 'Experiment_' + str(e) + '.npy', all_predicted_log_likelihood)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_rmse_Results_'+ 'Experiment_' + str(e) + '.npy', all_rmse)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+ 'LeNet5_Averaged_Main_Bald_Q10_N1000_logLikelihood_Results_'+ 'Experiment_' + str(e) + '.npy', all_predicted_log_likelihood)
 
 print('Saving Average Accuracy Over Experiments')
 
 Average_Accuracy = np.divide(Experiments_All_Accuracy, Experiments)
 
-np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Average_Accuracy'+'.npy', Average_Accuracy)
+np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Model_Architectures/Results/'+'LeNet5_Averaged_Main_Bald_Q10_N1000_Average_Accuracy'+'.npy', Average_Accuracy)
 
 
 

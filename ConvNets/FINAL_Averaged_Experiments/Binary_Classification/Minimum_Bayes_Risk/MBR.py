@@ -37,7 +37,7 @@ nb_conv = 3
 
 score=0
 all_accuracy = 0
-acquisition_iterations = 2
+acquisition_iterations = 90
 
 Queries = 10
 
@@ -327,17 +327,17 @@ for e in range(Experiments):
 	Experiments_All_Accuracy = Experiments_All_Accuracy + all_accuracy
 
 	print('Saving Results Per Experiment')
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+'Averaged_Main_MBR_Q100_N3000_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+ 'Averaged_Main_MBR_Q100_N3000_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+'Averaged_Main_MBR_Q100_N3000_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+ 'Averaged_Main_MBR_Q100_N3000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+ 'Averaged_Main_MBR_Q100_N3000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+'Averaged_Main_MBR_Q10_N1000_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+ 'Averaged_Main_MBR_Q10_N1000_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+'Averaged_Main_MBR_Q10_N3100_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+ 'Averaged_Main_MBR_Q10_N1000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+ 'Averaged_Main_MBR_Q10_N1000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
 
 print('Saving Average Accuracy Over Experiments')
 
 Average_Accuracy = np.divide(Experiments_All_Accuracy, Experiments)
 
-np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+'Averaged_Main_MBR_Q100_N3000_Average_Accuracy'+'.npy', Average_Accuracy)
+np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Minimum_Bayes_Risk/Results/'+'Averaged_Main_MBR_Q10_N1000_Average_Accuracy'+'.npy', Average_Accuracy)
 
 
 

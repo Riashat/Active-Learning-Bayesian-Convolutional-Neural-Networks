@@ -46,15 +46,17 @@ Queries = 1
 Experiments_All_Accuracy = np.zeros(shape=(acquisition_iterations+1))
 
 
-gamma_k = np.zeros(shape=(Queries))
-gamma = np.array([1])
-gamma_value = 0.98
+
 
 
 
 for e in range(Experiments):
 
 	print('Experiment Number ', e)
+
+	gamma_k = np.zeros(shape=(Queries))
+	gamma = np.array([1])
+	gamma_value = 0.98
 
 	# the data, shuffled and split between tran and test sets
 	(X_train_All, y_train_All), (X_test, y_test) = mnist.load_data()
