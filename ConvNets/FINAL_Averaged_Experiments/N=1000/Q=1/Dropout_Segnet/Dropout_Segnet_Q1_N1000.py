@@ -15,7 +15,7 @@ import scipy.io
 import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
 
-Experiments = 2
+Experiments = 1
 
 batch_size = 128
 nb_classes = 10

@@ -172,7 +172,7 @@ for e in range(Experiments):
 	model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 	model.add(Dropout(0.25))
 
-	c = 10
+	c = 3.5
 	Weight_Decay = c / float(X_train.shape[0])
 	model.add(Flatten())
 	model.add(Dense(128, W_regularizer=l2(Weight_Decay)))
@@ -290,7 +290,7 @@ for e in range(Experiments):
 		model.add(Dropout(0.25))
 
 
-		c = 10
+		c = 3.5
 		Weight_Decay = c / float(X_train.shape[0])
 		model.add(Flatten())
 		model.add(Dense(128, W_regularizer=l2(Weight_Decay)))

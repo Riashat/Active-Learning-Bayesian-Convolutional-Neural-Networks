@@ -39,9 +39,9 @@ score=0
 all_accuracy = 0
 all_predicted_log_likelihood = 0
 all_rmse = 0
-acquisition_iterations = 290
+acquisition_iterations = 90
 
-softmax_iterations = 10
+softmax_iterations = 5
 
 Queries = 10
 
@@ -210,12 +210,8 @@ for e in range(Experiments):
 
 	print('Evaluating Test Accuracy Without Acquisition')
 	score, acc = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
-	# Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
-	# predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
-	# rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
-	# all_predicted_log_likelihood = predicted_log_likelihood
-	# all_accuracy = acc
-	# all_rmse = rmse
+	all_accuracy = acc
+
 
 
 	print('Starting Active Learning in Experiment ', e)
@@ -237,7 +233,7 @@ for e in range(Experiments):
 
 		for d in range(softmax_iterations):
 			print('Softmax Uncertainty Estimate Iteration', d)
-			hist = model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, show_accuracy=True, verbose=0)
+			#hist = model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, show_accuracy=True, verbose=0)
 			softmax_score = model.predict(X_Pool_Dropout, batch_size=batch_size, verbose=0 )
 			score_All = score_All + softmax_score
 
@@ -265,17 +261,7 @@ for e in range(Experiments):
 		a_1d = U_X.flatten()
 		x_pool_index = a_1d.argsort()[-Queries:][::-1]
 
-
-		#store all the pooled images indexes
 		x_pool_All = np.append(x_pool_All, x_pool_index)
-
-		#saving pooled images
-
-		# #save only 3 images per iteration
-		# for im in range(x_pool_index[0:2].shape[0]):
-		# 	Image = X_Pool[x_pool_index[im], :, :, :]
-		# 	img = Image.reshape((28,28))
-			#sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bald/Pooled_Images/' + 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 		Pooled_X = X_Pool_Dropout[x_pool_index, 0:3,0:32,0:32]
 		Pooled_Y = y_Pool_Dropout[x_pool_index]	
@@ -345,9 +331,7 @@ for e in range(Experiments):
 		print('Test score:', score)
 		print('Test accuracy:', acc)
 		all_accuracy = np.append(all_accuracy, acc)
-		# Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
-		# predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
-		# rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
+
 
 
 		print('Use this trained model with pooled points for Dropout again')

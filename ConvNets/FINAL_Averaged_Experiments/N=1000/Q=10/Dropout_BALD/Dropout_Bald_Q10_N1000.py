@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from keras.regularizers import l2, activity_l2
 
 
-Experiments = 3
+Experiments = 2
 
 batch_size = 128
 nb_classes = 10
@@ -30,10 +30,11 @@ nb_epoch = 50
 img_rows, img_cols = 28, 28
 # number of convolutional filters to use
 nb_filters = 32
+
 # size of pooling area for max pooling
-nb_pool = 2
+nb_pool = 5
 # convolution kernel size
-nb_conv = 3
+nb_conv = 4
 
 score=0
 all_accuracy = 0
@@ -178,10 +179,10 @@ for e in range(Experiments):
 	model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 	model.add(Dropout(0.25))
 
-	c = 10
+	c = 3.5
 	Weight_Decay = c / float(X_train.shape[0])
 	model.add(Flatten())
-	model.add(Dense(128, W_regularizer=l2(Weight_Decay)))
+	model.add(Dense(256, W_regularizer=l2(Weight_Decay)))
 	model.add(Activation('relu'))
 	model.add(Dropout(0.5))
 	model.add(Dense(nb_classes))
@@ -313,10 +314,10 @@ for e in range(Experiments):
 		model.add(Dropout(0.25))
 
 
-		c = 10
+		c = 3.5
 		Weight_Decay = c / float(X_train.shape[0])
 		model.add(Flatten())
-		model.add(Dense(128, W_regularizer=l2(Weight_Decay)))
+		model.add(Dense(256, W_regularizer=l2(Weight_Decay)))
 		model.add(Activation('relu'))
 		model.add(Dropout(0.5))
 		model.add(Dense(nb_classes))
@@ -355,18 +356,18 @@ for e in range(Experiments):
 
 
 	print('Saving Results Per Experiment')
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q10_N1000_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Averaged_Main_Bald_Q10_N1000_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q10_N1000_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Averaged_Main_Bald_Q10_N1000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q10_N1000_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
-	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Averaged_Main_Bald_Q10_N1000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Final_Bald_Q10_N1000_Train_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Final_Bald_Q10_N1000_Valid_Loss_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Loss)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Final_Main_Bald_Q10_N1000_Train_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Train_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Final_Bald_Q10_N1000_Valid_Acc_'+ 'Experiment_' + str(e) + '.npy', Pool_Valid_Acc)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Final_Bald_Q10_N1000_Pooled_Image_Index_'+ 'Experiment_' + str(e) + '.npy', x_pool_All)
+	np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+ 'Final_Bald_Q10_N1000_Accuracy_Results_'+ 'Experiment_' + str(e) + '.npy', all_accuracy)
 
 print('Saving Average Accuracy Over Experiments')
 
 Average_Accuracy = np.divide(Experiments_All_Accuracy, Experiments)
 
-np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Averaged_Main_Bald_Q10_N1000_Average_Accuracy'+'.npy', Average_Accuracy)
+np.save('/home/ri258/Documents/Project/MPhil_Thesis_Cluster_Experiments/ConvNets/Cluster_Experiments/Dropout_Bald/Results/'+'Final_Bald_Q10_N1000_Average_Accuracy'+'.npy', Average_Accuracy)
 
 
 

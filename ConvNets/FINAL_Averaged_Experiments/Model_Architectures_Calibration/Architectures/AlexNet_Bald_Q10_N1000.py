@@ -300,13 +300,6 @@ for e in range(Experiments):
 		#store all the pooled images indexes
 		x_pool_All = np.append(x_pool_All, x_pool_index)
 
-		#saving pooled images
-
-		# #save only 3 images per iteration
-		# for im in range(x_pool_index[0:2].shape[0]):
-		# 	Image = X_Pool[x_pool_index[im], :, :, :]
-		# 	img = Image.reshape((28,28))
-			#sp.misc.imsave('/home/ri258/Documents/Project/Active-Learning-Deep-Convolutional-Neural-Networks/ConvNets/Cluster_Experiments/Dropout_Bald/Pooled_Images/' + 'Experiment_' + str(e) + 'Pool_Iter'+str(i)+'_Image_'+str(im)+'.jpg', img)
 
 		Pooled_X = X_Pool_Dropout[x_pool_index, 0:3,0:32,0:32]
 		Pooled_Y = y_Pool_Dropout[x_pool_index]	
@@ -409,9 +402,7 @@ for e in range(Experiments):
 		print('Test score:', score)
 		print('Test accuracy:', acc)
 		all_accuracy = np.append(all_accuracy, acc)
-		# Y_predict_probabilities = model.predict_proba(X_test, batch_size=batch_size)
-		# predicted_log_likelihood = log_loss(Y_test, Y_predict_probabilities)
-		# rmse = sqrt(mean_squared_error(Y_test, Y_predict_probabilities))
+
 
 		print('Use this trained model with pooled points for Dropout again')
 
