@@ -14,9 +14,9 @@ rcParams['text.latex.preamble'] = [r'\usepackage{sfmath} \boldmath']
 
 
 
-Dropout_Bald = np.load('N100_Bald.npy')
+Dropout_Bald = np.load('N100_Dropout_Bald.npy')
 Dropout_LC = np.load('N100_Dropout_LC.npy')
-Dropout_MaxEntropy = np.load('N100_Dropout_MaxEntropy.npy')
+Dropout_MaxEntropy = np.load('N100_Dropout_Max_Entropy.npy')
 Segnet = np.load('N100_Segnet.npy')
 VarRatio = np.load('N100_VarRatio.npy')
 
@@ -32,12 +32,13 @@ Q1 = np.arange(20, 101, 1)
 
 plt.figure(figsize=(12, 8), dpi=80)
 
-plt.plot(Q1, Dropout_Bald, color="red", linewidth=1.0, marker='x', label=r"\textbf{Dropout BALD}" )
-plt.plot(Q1, Dropout_LC, color="black", linewidth=1.0, marker='x', label=r"\textbf{Dropout Least Confident}" )
-plt.plot(Q1, Dropout_MaxEntropy, color="blue", linewidth=1.0, marker='x', label=r"\textbf{Dropout Max Entropy}" )
-plt.plot(Q1, VarRatio, color="green", linewidth=1.0, marker='x', label=r"\textbf{Dropout Variation Ratio}" )
-plt.plot(Q1, Random, color="cyan", linewidth=1.0, marker='x', label=r"\textbf{Random}" )
-plt.plot(Q1, BvSB, color="yellow", linewidth=1.0, marker='x', label=r"\textbf{Best vs Second Best}" )
+plt.plot(Q1, Dropout_Bald, color="red", linewidth=2.0, marker='.', label=r"\textbf{Dropout BALD}" )
+plt.plot(Q1, Dropout_LC, color="black", linewidth=2.0, marker='.', label=r"\textbf{Dropout Least Confident}" )
+plt.plot(Q1, Dropout_MaxEntropy, color="blue", linewidth=2.0, marker='.', label=r"\textbf{Dropout Max Entropy}" )
+plt.plot(Q1, VarRatio, color="green", linewidth=2.0, marker='.', label=r"\textbf{Dropout Variation Ratio}" )
+plt.plot(Q1, Segnet, color="magenta", linewidth=2.0, marker='.', label=r"\textbf{Dropout Bayes Segnet}" )
+plt.plot(Q1, Random, color="cyan", linewidth=2.0, marker='.', label=r"\textbf{Random}" )
+plt.plot(Q1, BvSB, color="yellow", linewidth=2.0, marker='.', label=r"\textbf{Best vs Second Best}" )
 
 
 plt.xlabel(r'\textbf{Number of Labelled Samples from Pool Set}')

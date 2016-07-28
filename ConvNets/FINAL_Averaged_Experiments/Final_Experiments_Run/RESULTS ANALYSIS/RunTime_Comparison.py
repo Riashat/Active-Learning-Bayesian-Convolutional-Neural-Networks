@@ -13,10 +13,12 @@ rc('axes', linewidth=2)
 rc('font', weight='bold')
 rcParams['text.latex.preamble'] = [r'\usepackage{sfmath} \boldmath']
 
+Bald_Q1 = np.load('RunTime_Bald_Q1_Accuracy.npy')
 Bald_Q5 = np.load('RunTime_Bald_Q5_Accuracy.npy')
 Bald_Q10 = np.load('RunTime_Bald_Q10_Accuracy.npy')
 Bald_Q100 = np.load('RunTime_Bald_Q100_Accuracy.npy')
 
+Q1_Time = np.load('RunTime_Bald_Q1_Time.npy')
 Q5_Time = np.load('RunTime_Bald_Q5_Time.npy')
 Q10_Time = np.load('Runtime_Bald_Q10_Time.npy')
 Q100_Time = np.load('RunTime_Bald_Q100_Time.npy')
@@ -27,10 +29,11 @@ Bald_Q5_v2 = np.load('Bald_Q5_N1000.npy')
 Bald_Q10_N3000_v2 = np.load('Bald_Q10_N3000.npy')
 
 col_labels=['Total Run Time (Hours)']
-row_labels=['Query = 5','Query = 10','Query = 100']
-table_vals=[[31.9],[16.78],[2.04]]
+row_labels=['Query = 1','Query = 5','Query = 10','Query = 100']
+table_vals=[[33.56], [31.9],[16.78],[2.04]]
 
 
+Q1 = np.arange(20, 1001, 1)
 Q5= np.arange(20, 1005, 5)
 Q10 = np.arange(20, 1010, 10)
 Q100 = np.arange(100, 1100, 100)
@@ -45,9 +48,10 @@ Q1_v2 = np.arange(100, 1001, 1)
 
 plt.figure(figsize=(12, 8), dpi=80)
 
-plt.plot(Q5, Bald_Q5, color="red", linewidth=1.0, marker='^', label=r"\textbf{Dropout BALD Queries = 5}" )
-plt.plot(Q10, Bald_Q10, color="black", linewidth=1.0, marker='o', label=r"\textbf{Dropout BALD Queries = 10}" )
-plt.plot(Q100, Bald_Q100, color="blue", linewidth=1.0, marker='.', label=r"\textbf{Dropout BALD Queries = 100}" )
+plt.plot(Q1, Bald_Q1, color="magenta", linewidth=1.0, marker='x', label=r"\textbf{Dropout BALD Queries = 1}" )
+plt.plot(Q5, Bald_Q5, color="red", linewidth=3.0, marker='o', label=r"\textbf{Dropout BALD Queries = 5}" )
+plt.plot(Q10, Bald_Q10, color="black", linewidth=3.0, marker='^', label=r"\textbf{Dropout BALD Queries = 10}" )
+plt.plot(Q100, Bald_Q100, color="blue", linewidth=3.0, marker='.', label=r"\textbf{Dropout BALD Queries = 100}" )
 
 #plt.plot(Q1_v2, Bald_Q1_v2, color="green", linewidth=1.0, marker='x', label=r"\textbf{Dropout BALD Queries = 1 V2}" )
 #plt.plot(Q5_v2, Bald_Q5_v2, color="black", linewidth=1.0, marker='^', label=r"\textbf{Dropout BALD Queries = 5 V2}" )
